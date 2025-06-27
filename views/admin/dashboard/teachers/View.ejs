@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Teachers</h1>
-        <a href="/portal/admin/dashboard/teachers/add">Add Teacher</a>
-</body>
+    <a href="/portal/admin/dashboard/teachers/add">Add Teacher</a>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>FullName</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Role</th>
+        <th>View</th>
+      </tr>
+      <% if (teachers.length > 0) { %> <% teachers.forEach(teacher => { %>
+      <tr>
+        <td><%= teacher.id.slice(5, 8) %>***</td>
+        <td><%= teacher.name %></td>
+        <td><%= teacher.email %></td>
+        <td><%= teacher.phone %></td>
+        <td><%= teacher.role %></td>
+        <td>
+          <a href="/portal/admin/dashboard/teachers/view/<%= teacher._id %>"
+            >View</a
+          >
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
 </html>

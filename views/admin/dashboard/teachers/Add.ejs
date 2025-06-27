@@ -8,22 +8,53 @@
   <body>
     <h1>Add Teacher</h1>
 
-    <form action="" method="post">
-      <input type="text" name="name" id="" placeholder="Fullname" />
+    <p><%= msg %></p>
+
+    <form action="/portal/admin/dashboard/teachers/add" method="post">
+      <input type="text" name="name" id="" placeholder="Fullname" required />
       <br />
-      <input type="email" name="email" id="" placeholder="Email" />
+      <input type="email" name="email" id="" placeholder="Email" required />
       <br />
-      <input type="password" name="password" id="" placeholder="Password" />
+      <input
+        type="password"
+        name="password"
+        id=""
+        placeholder="Password"
+        required
+      />
       <br />
-      <input type="tel" name="phone" id="" placeholder="Phone Number" />
+      <input
+        type="tel"
+        name="phone"
+        id=""
+        placeholder="Phone Number"
+        required
+      />
       <br />
-      <input type="checkbox" name="classes" id="English" value="English" />
-      <label for="English">English</label>
+      <% if (classes.length > 0) { %> <% classes.forEach(clas => { %>
+      <input
+        type="checkbox"
+        name="classes"
+        id="<%= clas.name %>"
+        value="<%= clas.name %>"
+      />
+      <label for="<%= clas.name %>"><%= clas.name %></label>
       <br />
-      <select name="role">
-        <option value="HOD">Head of Department</option>
-        <option value="Teacher">Teacher</option>
-      </select>
+      <% }) %> <% } %> <% if (subjects.length > 0) { %> <%
+      subjects.forEach(subject => { %>
+      <input
+        type="checkbox"
+        name="subjects"
+        id="<%=subject.title %>"
+        value="<%=subject.title %>"
+      />
+      <label for="<%=subject.title %>"><%=subject.title %></label>
+      <br />
+      <% }) %> <% } %>
+      <input type="radio" name="role" value="HOD" />
+      <label for="role">HOD (optional)</label>
+      <br />
+      <input type="submit" value="Add" />
     </form>
   </body>
 </html>

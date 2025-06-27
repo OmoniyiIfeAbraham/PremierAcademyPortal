@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1><%= teacher.name %> Dashboard</h1>
+    <p>Email: <%= teacher.email %></p>
+    <p>Phone Number: <%= teacher.phone %></p>
+    <p>Role: <%= teacher.role %></p>
+    <h2>Classes</h2>
+    <ol>
+      <% teacher.classes.forEach(clas => { %>
+      <li><%= clas %></li>
+      <% }) %>
+    </ol>
+    <h2>Subjects</h2>
+    <ol>
+      <% teacher.subjects.forEach(subject => { %>
+      <li><%= subject %></li>
+      <% }) %>
+    </ol>
+    <a href="/portal/admin/dashboard/teachers/edit/<%= teacher._id %>">Edit</a>
+    <a href="/portal/admin/dashboard/teachers/delete/<%= teacher._id %>"
+      >Delete</a
+    >
+  </body>
+</html>

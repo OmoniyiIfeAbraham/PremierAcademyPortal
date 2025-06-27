@@ -23,8 +23,13 @@ const teacherProfile = new Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
     classes: {
+      type: [String],
+      required: true,
+    },
+    subjects: {
       type: [String],
       required: true,
     },
@@ -32,6 +37,7 @@ const teacherProfile = new Schema(
       type: String,
       required: true,
       enum: ["HOD", "Teacher"],
+      default: "Teacher",
     },
   },
   { timestamps: true }
