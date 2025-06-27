@@ -15,7 +15,6 @@ const classDetail = new Schema(
     },
     classTeacher: {
       type: String,
-      required: true,
     },
   },
   { timestamps: true }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Classes</h1>
+    <a href="/portal/admin/dashboard/classes/add">Add Class</a>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Class Name</th>
+        <th>View</th>
+      </tr>
+      <% if (classes.length > 0) { %> <% classes.forEach(classs => { %>
+      <tr>
+        <td><%= classs.id.slice(5, 8) %>***</td>
+        <td><%= classs.name %></td>
+        <td><a href="/portal/admin/dashboard/classes/view/<%= classs._id %>">View</td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
+</html>

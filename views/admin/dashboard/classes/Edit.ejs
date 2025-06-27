@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Edit <%= classs.name %> Class</h1>
+
+    <p><%= msg %></p>
+
+    <form
+      action="/portal/admin/dashboard/classes/edit/<%= classs._id %>"
+      method="post"
+    >
+      <input
+        type="text"
+        name="name"
+        id=""
+        placeholder="Class Name"
+        required
+        value="<%= classs.name %>"
+      />
+      <br />
+      <% if (subjects.length > 0) { %> 
+        <% subjects.forEach(subject => { %>
+          <% const isChecked = classs.subjects.includes(subject.title); %>
+          <input
+            type="checkbox"
+            name="subjects"
+            id="<%= subject.title %>"
+            value="<%= subject.title %>"
+            <% if (isChecked) { %>checked<% } %>
+          />
+          <label for="<%= subject.title %>"><%= subject.title %></label>
+          <br />
+        <% }) %>
+      <% } else { %>
+        <p>No Subject Available</p>
+      <% } %>
+      <br />
+      <label for="classTeacher">Assign Class Teacher</label>
+      <select name="classTeacher">
+        <% if (teachers.length > 0) { %> 
+          <% teachers.forEach(teacher => { %>
+            <% if(teacher._id === classs.classTeacher) { %>
+              <option value="<%= teacher._id %>" selected><%= teacher.name %></option>
+            <% } else { %>
+              <option value="<%= teacher._id %>"><%= teacher.name %></option>
+            <% } %>
+          <% }) %>
+        <% } else { %>
+          <option value="" disabled>-----</option>
+        <% } %>
+      </select>
+      <br />
+      <input type="submit" value="Edit" />
+    </form>
+  </body>
+</html>

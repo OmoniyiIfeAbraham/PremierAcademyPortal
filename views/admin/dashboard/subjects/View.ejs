@@ -8,5 +8,29 @@
   <body>
     <h1>Subjects</h1>
     <a href="/portal/admin/dashboard/subjects/add">Add Subject</a>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Subject Title</th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+      <% if (subjects.length > 0) { %> <% subjects.forEach(subject => { %>
+      <tr>
+        <td><%= subject.id.slice(5, 8) %>***</td>
+        <td><%= subject.title %></td>
+        <td><a href="/portal/admin/dashboard/subjects/edit/<%= subject._id %>">Edit</td>
+        <td><a href="/portal/admin/dashboard/subjects/delete/<%= subject._id %>">Delete</a></td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+      </tr>
+      <% } %>
+    </table>
   </body>
 </html>

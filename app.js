@@ -62,3 +62,7 @@ app.use(
   "/portal/admin/dashboard/subjects",
   require("./routes/admin/dashboard/subjects/Index")
 );
+app.use(
+  "/portal/admin/dashboard/classes",
+  require("./routes/admin/dashboard/classes/Index")
+);

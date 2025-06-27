@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1><%= classs.name %> Class</h1>
+    <h2>Subjects</h2>
+    <ol>
+      <% classs.subjects.forEach(subject => { %>
+      <li><%= subject %></li>
+      <% }) %>
+    </ol>
+    <p>Class Teacher: <b><%= classs.classTeacher %></b></p>
+    <a href="/portal/admin/dashboard/classes/edit/<%= classs._id %>">Edit</a>
+    <a href="/portal/admin/dashboard/classes/delete/<%= classs._id %>"
+      >Delete</a
+    >
+  </body>
+</html>
