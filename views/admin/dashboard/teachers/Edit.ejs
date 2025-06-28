@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Edit Teacher</h1>
+
+    <p><%= msg %></p>
+
+    <form action="/portal/admin/dashboard/teachers/edit/<%= teacher._id %>" method="post">
+      <input
+        type="text"
+        name="name"
+        id=""
+        placeholder="Fullname"
+        required
+        value="<%= teacher.name %>"
+      />
+      <br />
+      <input
+        type="tel"
+        name="phone"
+        id=""
+        placeholder="Phone Number"
+        required
+        value="<%= teacher.phone %>"
+      />
+      <br />
+      <% if (classes.length > 0) { %> <% classes.forEach(clas => { %> <% const
+      isChecked = teacher.classes.includes(clas.name); %>
+      <input
+        type="checkbox"
+        name="classes"
+        id="<%= clas.name %>"
+        value="<%= clas.name %>"
+        <% if (isChecked) { %> checked <% } %>
+      />
+      <label for="<%= clas.name %>"><%= clas.name %></label>
+      <br />
+      <% }) %> <% } %> 
+      <br>
+      <% if (subjects.length > 0) { %> <%
+      subjects.forEach(subject => { %>
+         <% const isChecked = teacher.subjects.includes(subject.title); %>
+      <input
+        type="checkbox"
+        name="subjects"
+        id="<%=subject.title %>"
+        value="<%=subject.title %>"
+        <% if (isChecked) { %> checked <% } %>
+      />
+      <label for="<%=subject.title %>"><%=subject.title %></label>
+      <br />
+      <% }) %> <% } %> <% if(teacher.role === 'HOD') { %>
+      <input type="radio" name="role" value="HOD" checked />
+      <label for="role">HOD (optional)</label>
+      <br />
+      <input type="radio" name="role" value="Teacher" />
+      <label for="role">Teacher (optional)</label>
+      <% } else { %>
+      <input type="radio" name="role" value="HOD" />
+      <label for="role">HOD (optional)</label>
+      <% } %>
+      <br />
+      <input type="submit" value="Edit" />
+    </form>
+  </body>
+</html>
