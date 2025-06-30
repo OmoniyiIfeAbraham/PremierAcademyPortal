@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Add Student</h1>
+
+    <p><%= msg %></p>
+
+    <form action="/portal/admin/dashboard/students/add" method="post">
+      <input type="text" name="name" id="" placeholder="Fullname" required />
+      <br />
+      <input type="email" name="email" id="" placeholder="Email" required />
+      <br />
+      <input
+        type="password"
+        name="password"
+        id=""
+        placeholder="Password"
+        required
+      />
+      <br />
+      <input
+        type="tel"
+        name="phone"
+        id=""
+        placeholder="Phone Number"
+        required
+      />
+      <br />
+      <% if (classes.length > 0) { %>
+      <select name="class" id="classes">
+        <option value="" disabled>---SELECT CLASS---</option>
+        <% classes.forEach(clas => { %>
+        <option value="<%= clas._id %>"><%= clas.name %></option>
+        <% }) %>
+      </select>
+      <br />
+      <% } %>
+      <input type="submit" value="Add" />
+    </form>
+  </body>
+</html>

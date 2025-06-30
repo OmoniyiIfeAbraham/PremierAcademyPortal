@@ -4,6 +4,7 @@ const ClassDetailModel = require("../../../../models/Classes/ClassDetail.model")
 const DetailModel = require("../../../../models/Subjects/Detail.model");
 const mailer = require("nodemailer");
 const bcrypt = require("bcrypt");
+const StudentProfileModel = require("../../../../models/Students/StudentProfile.model");
 const router = express.Router();
 
 const systemMail = mailer.createTransport({
@@ -22,8 +23,9 @@ const systemMail = mailer.createTransport({
 router.get("/", async (req, res) => {
   const sess = req.session;
   if (sess.email && sess.password && sess.identifier === "admin") {
-    const teachers = await ProfileModel.find({}).sort({ createdAt: -1 });
-    res.render("admin/dashboard/teachers/View", { teachers });
+    const students = await StudentProfileModel.find({}).sort({ createdAt: -1 });
+    const classes = await ClassDetailModel.find({});
+    res.render("admin/dashboard/students/View", { students, classes });
   } else {
     res.redirect("/portal/admin/auth/login");
   }
@@ -33,8 +35,7 @@ router.get("/add", async (req, res) => {
   const sess = req.session;
   if (sess.email && sess.password && sess.identifier === "admin") {
     const classes = await ClassDetailModel.find({}).sort({ createdAt: -1 });
-    const subjects = await DetailModel.find({}).sort({ createdAt: -1 });
-    res.render("admin/dashboard/teachers/Add", { classes, subjects, msg: "" });
+    res.render("admin/dashboard/students/Add", { classes, msg: "" });
   } else {
     res.redirect("/portal/admin/auth/login");
   }
@@ -46,89 +47,66 @@ router.post("/add", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const phone = req.body.phone;
-  const role = req.body.role;
-  const Subjects = req.body.subjects;
-  const Classes = req.body.classes;
+  const classs = req.body.class;
   //   console.log(name, Subjects, teacher);
   if (sess.email && sess.password && sess.identifier === "admin") {
-    const subjects = await DetailModel.find({}).sort({ createdAt: -1 });
     const classes = await ClassDetailModel.find({}).sort({ createdAt: -1 });
-    const checkMail = await ProfileModel.findOne({ email: email });
-    const checkPhone = await ProfileModel.findOne({ phone: phone });
+    const checkMail = await StudentProfileModel.findOne({ email: email });
+    const checkPhone = await StudentProfileModel.findOne({ phone: phone });
     if (
       name == null ||
       email == null ||
       password == null ||
       phone == null ||
-      Subjects.length <= 0 ||
-      Classes.length <= 0
+      classs == null
     ) {
-      res.render("admin/dashboard/teachers/Add", {
-        msg: "Name, Email, Password, Phone Number, Subjects and Classes fields are all required",
-        subjects,
+      res.render("admin/dashboard/students/Add", {
+        msg: "Name, Email, Password, Phone Number, and Class fields are all required",
         classes,
       });
     } else if (phone.length !== 11) {
-      res.render("admin/dashboard/teachers/Add", {
+      res.render("admin/dashboard/students/Add", {
         msg: "Phone Number must be 11 digits",
-        subjects,
         classes,
       });
     } else if (password.length < 8) {
-      res.render("admin/dashboard/teachers/Add", {
+      res.render("admin/dashboard/students/Add", {
         msg: "Password must be at least 8 characters long",
-        subjects,
-        classes,
-      });
-    } else if (Subjects.length <= 0) {
-      res.render("admin/dashboard/teachers/Add", {
-        msg: "Subjects cannot be empty",
-        subjects,
-        classes,
-      });
-    } else if (Classes.length <= 0) {
-      res.render("admin/dashboard/teachers/Add", {
-        msg: "Classes cannot be empty",
-        subjects,
         classes,
       });
     } else if (checkMail) {
-      res.render("admin/dashboard/teachers/Add", {
+      res.render("admin/dashboard/students/Add", {
         msg: "Email already exists",
-        subjects,
         classes,
       });
     } else if (checkPhone) {
-      res.render("admin/dashboard/teachers/Add", {
+      res.render("admin/dashboard/students/Add", {
         msg: "Phone Number already exists",
-        subjects,
         classes,
       });
     } else {
-      await ProfileModel.create({
+      await StudentProfileModel.create({
         name: name,
-        subjects: Subjects,
         email: email,
         password: bcrypt.hashSync(password, 10),
         phone: phone,
-        classes: Classes,
-        role: role,
+        class: classs,
       });
       async function mail() {
         const mailOption = {
           from: `${process.env.adminName} ${process.env.email}`,
           to: email,
-          subject: `${name} - Teacher Login Details`,
+          subject: `${name} - Student Login Details`,
           html: `
                     <body>
-                        <center><h3>Hello ${name} Your Account has been created successfully. Below are your login details. </h3> <p> Visit </p> <a href="${process.env.link}/login/teacher">Login as Teacher</a> <p>Email: ${email}</p> <p>Password: ${password}</p></center>
+                        <center><h3>Hello ${name} Your Account has been created successfully. Below are your login details. </h3> <p> Visit </p> <a href="${process.env.link}/login/student">Login as Student</a> <p>Email: ${email}</p> <p>Password: ${password}</p></center>
                     </body>
                 `,
         };
         await systemMail.sendMail(mailOption);
       }
       mail();
-      res.redirect("/portal/admin/dashboard/teachers");
+      res.redirect("/portal/admin/dashboard/students");
     }
   } else {
     res.redirect("/portal/admin/auth/login");
@@ -139,9 +117,15 @@ router.get("/view/:id", async (req, res) => {
   const sess = req.session;
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier === "admin") {
-    const teacher = await ProfileModel.findById(id);
+    const student = await StudentProfileModel.findById(id);
+    const classes = await ClassDetailModel.find({});
+    const classs = await ClassDetailModel.findOne({ _id: student.class });
     // console.log(classs);
-    res.render("admin/dashboard/teachers/ViewSingle", { teacher });
+    res.render("admin/dashboard/students/ViewSingle", {
+      student,
+      classes,
+      classs,
+    });
   } else {
     res.redirect("/portal/admin/auth/login");
   }
@@ -151,13 +135,11 @@ router.get("/edit/:id", async (req, res) => {
   const sess = req.session;
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier) {
-    const teacher = await ProfileModel.findById(id);
-    const subjects = await DetailModel.find({}).sort({ createdAt: -1 });
+    const student = await StudentProfileModel.findById(id);
     const classes = await ClassDetailModel.find({}).sort({ createdAt: -1 });
-    res.render("admin/dashboard/teachers/Edit", {
-      teacher,
+    res.render("admin/dashboard/students/Edit", {
+      student,
       msg: "",
-      subjects,
       classes,
     });
   } else {
@@ -168,43 +150,23 @@ router.get("/edit/:id", async (req, res) => {
 router.post("/edit/:id", async (req, res) => {
   const sess = req.session;
   const name = req.body.name;
-  const role = req.body.role;
-  const Subjects = req.body.subjects;
-  const Classes = req.body.classes;
+  const classs = req.body.class;
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier === "admin") {
-    const teacher = await ProfileModel.findById(id);
-    const subjects = await DetailModel.find({}).sort({ createdAt: -1 });
+    const student = await StudentProfileModel.findById(id);
     const classes = await ClassDetailModel.find({}).sort({ createdAt: -1 });
-    if (name == null || Subjects.length <= 0 || Classes.length <= 0) {
-      res.render("admin/dashboard/teachers/Edit", {
-        msg: "Name, Subjects and Classes fields are all required",
-        subjects,
+    if (name == null || classs == null) {
+      res.render("admin/dashboard/students/Edit", {
+        msg: "Name and Class fields are all required",
         classes,
-        teacher,
-      });
-    } else if (Subjects.length <= 0) {
-      res.render("admin/dashboard/teachers/Edit", {
-        msg: "Subjects cannot be empty",
-        subjects,
-        classes,
-        teacher,
-      });
-    } else if (Classes.length <= 0) {
-      res.render("admin/dashboard/teachers/Edit", {
-        msg: "Classes cannot be empty",
-        subjects,
-        classes,
-        teacher,
+        student,
       });
     } else {
-      await ProfileModel.findByIdAndUpdate(id, {
+      await StudentProfileModel.findByIdAndUpdate(id, {
         name: name,
-        subjects: Subjects,
-        classes: Classes,
-        role: role,
+        class: classs,
       });
-      res.redirect(`/portal/admin/dashboard/teachers/view/${id}`);
+      res.redirect(`/portal/admin/dashboard/students/view/${id}`);
     }
   } else {
     res.redirect("/portal/admin/auth/login");
@@ -215,9 +177,9 @@ router.get("/edit_password/:id", async (req, res) => {
   const sess = req.session;
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier) {
-    const teacher = await ProfileModel.findById(id);
-    res.render("admin/dashboard/teachers/EditPassword", {
-      teacher,
+    const student = await StudentProfileModel.findById(id);
+    res.render("admin/dashboard/students/EditPassword", {
+      student,
       msg: "",
     });
   } else {
@@ -230,31 +192,31 @@ router.post("/edit_password/:id", async (req, res) => {
   const password = req.body.password;
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier === "admin") {
-    const teacher = await ProfileModel.findById(id);
+    const student = await StudentProfileModel.findById(id);
     if (password == null || password.length < 8) {
-      res.render("admin/dashboard/teachers/EditPassword", {
+      res.render("admin/dashboard/students/EditPassword", {
         msg: "Password must be at least 8 characters long",
-        teacher,
+        student,
       });
     } else {
-      await ProfileModel.findByIdAndUpdate(id, {
+      await StudentProfileModel.findByIdAndUpdate(id, {
         password: bcrypt.hashSync(password, 10),
       });
       async function mail() {
         const mailOption = {
           from: `${process.env.adminName} ${process.env.email}`,
-          to: teacher.email,
-          subject: `${teacher.name} - Updated Teacher Login Details`,
+          to: student.email,
+          subject: `${student.name} - Updated Student Login Details`,
           html: `
                     <body>
-                        <center><h3>Hello ${teacher.name} Your Account password been updated. Below are your new login details. </h3> <p> Visit </p> <a href="${process.env.link}/login/teacher">Login as Teacher</a> <p>Email: ${teacher.email}</p> <p>Password: ${password}</p></center>
+                        <center><h3>Hello ${student.name} Your Account password been updated. Below are your new login details. </h3> <p> Visit </p> <a href="${process.env.link}/login/student">Login as Teacher</a> <p>Email: ${student.email}</p> <p>Password: ${password}</p></center>
                     </body>
                 `,
         };
         await systemMail.sendMail(mailOption);
       }
       mail();
-      res.redirect(`/portal/admin/dashboard/teachers/view/${id}`);
+      res.redirect(`/portal/admin/dashboard/students/view/${id}`);
     }
   } else {
     res.redirect("/portal/admin/auth/login");
@@ -265,8 +227,8 @@ router.get("/delete/:id", async (req, res) => {
   const sess = req.session;
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier) {
-    await ProfileModel.findByIdAndDelete(id);
-    res.redirect(`/portal/admin/dashboard/teachers`);
+    await StudentProfileModel.findByIdAndDelete(id);
+    res.redirect(`/portal/admin/dashboard/students`);
   } else {
     res.redirect("/portal/admin/auth/login");
   }

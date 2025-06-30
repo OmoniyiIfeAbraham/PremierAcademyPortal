@@ -21,6 +21,7 @@ const studentProfile = new Schema(
     phone: {
       type: String,
       trim: true,
+      unique: true,
     },
     class: {
       type: String,

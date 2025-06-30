@@ -20,15 +20,6 @@
         value="<%= teacher.name %>"
       />
       <br />
-      <input
-        type="tel"
-        name="phone"
-        id=""
-        placeholder="Phone Number"
-        required
-        value="<%= teacher.phone %>"
-      />
-      <br />
       <% if (classes.length > 0) { %> <% classes.forEach(clas => { %> <% const
       isChecked = teacher.classes.includes(clas.name); %>
       <input

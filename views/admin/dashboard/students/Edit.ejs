@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Edit Student</h1>
+
+    <p><%= msg %></p>
+
+    <form
+      action="/portal/admin/dashboard/students/edit/<%= student._id %>"
+      method="post"
+    >
+      <input
+        type="text"
+        name="name"
+        id=""
+        placeholder="Fullname"
+        required
+        value="<%= student.name %>"
+      />
+      <br />
+      <% if (classes.length > 0) { %>
+      <select name="class" id="classes">
+        <option value="" disabled>---SELECT CLASS---</option>
+        <% classes.forEach(clas => { %> <% if (clas.id === student.class) { %>
+        <option value="<%= clas._id %>"><%= clas.name %></option>
+        <% } %> <% }) %> <% classes.forEach(clas => { %>
+        <option value="<%= clas._id %>"><%= clas.name %></option>
+        <% }) %>
+      </select>
+      <br />
+      <% } %>
+      <br />
+      <input type="submit" value="Edit" />
+    </form>
+  </body>
+</html>

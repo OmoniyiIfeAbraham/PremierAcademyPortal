@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Students</h1>
+    <a href="/portal/admin/dashboard/students/add">Add Student</a>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>FullName</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Class</th>
+        <th>View</th>
+      </tr>
+      <% if (students.length > 0) { %> <% students.forEach(student => { %>
+      <tr>
+        <td><%= student.id.slice(5, 8) %>***</td>
+        <td><%= student.name %></td>
+        <td><%= student.email %></td>
+        <td><%= student.phone %></td>
+        <% classes.forEach(clas => { %> <% if (clas.id === student.class) { %>
+        <td><%= clas.name %></td>
+        <% } %> <% }) %>
+        <td>
+          <a href="/portal/admin/dashboard/students/view/<%= student._id %>"
+            >View</a
+          >
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
+</html>

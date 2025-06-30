@@ -66,3 +66,7 @@ app.use(
   "/portal/admin/dashboard/classes",
   require("./routes/admin/dashboard/classes/Index")
 );
+app.use(
+  "/portal/admin/dashboard/students",
+  require("./routes/admin/dashboard/students/Index")
+);

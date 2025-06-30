@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1><%= student.name %> Dashboard</h1>
+    <p>Email: <%= student.email %></p>
+    <p>Phone Number: <%= student.phone %></p>
+    <p>Class: <%= classs.name %></p>
+    <h2>Subjects</h2>
+    <ol>
+      <% classs?.subjects?.forEach(subject => { %>
+      <li><%= subject %></li>
+      <% }) %>
+    </ol>
+    <a href="/portal/admin/dashboard/students/edit/<%= student._id %>">Edit</a>
+    <a href="/portal/admin/dashboard/students/edit_password/<%= student._id %>"
+      >Change Password</a
+    >
+    <a href="/portal/admin/dashboard/students/delete/<%= student._id %>"
+      >Delete</a
+    >
+  </body>
+</html>
