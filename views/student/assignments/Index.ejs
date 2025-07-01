@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Assignments</h1>
+    <a href="/portal/student/dashboard/assignments/add">Submit Assignment</a>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Subject</th>
+        <th>Class</th>
+        <th>Score</th>
+        <th>View</th>
+      </tr>
+      <% if (assignments.length > 0) { %> <% assignments.forEach(assignment => {
+      %>
+      <tr>
+        <td><%= assignment.id.slice(5, 8) %>***</td>
+        <td><%= assignment.title %></td>
+        <% subjects.forEach(subject => { %> <% if (subject.id === assignment.subject) {
+        %>
+        <td><%= subject.title %></td>
+        <% } %> <% }) %> <% classes.forEach(clas => { %> <% if (clas.id ===
+        assignment.class) { %>
+        <td><%= clas.name %></td>
+        <% } %> <% }) %>
+        <td><%= assignment.score %> / <%= assignment.grade %></td>
+        <td>
+          <a
+            href="/portal/admin/dashboard/assignments/view/<%= assignment._id %>"
+            >View</a
+          >
+        </td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+        <td>---</td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
+</html>

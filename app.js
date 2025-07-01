@@ -70,3 +70,11 @@ app.use(
   "/portal/admin/dashboard/students",
   require("./routes/admin/dashboard/students/Index")
 );
+//GENERAL
+app.use("/", require("./routes//general/Index"));
+// STUDENT
+app.use("/portal/student/auth/login", require("./routes/student/auth/Login"));
+app.use(
+  "/portal/student/dashboard",
+  require("./routes/student/dashboard/Index")
+);

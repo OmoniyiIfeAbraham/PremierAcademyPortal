@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 
 const assignmentInfo = new Schema(
   {
+    student: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -25,7 +29,7 @@ const assignmentInfo = new Schema(
       trim: true,
     },
     class: {
-      type: [String],
+      type: String,
       required: true,
     },
     grade: {

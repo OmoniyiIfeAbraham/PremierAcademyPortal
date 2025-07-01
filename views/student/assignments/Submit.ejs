@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Submit Assignment</h1>
+
+    <p><%= msg %></p>
+
+    <form action="/portal/student/dashboard/assignments/add" method="post">
+      <input
+        type="text"
+        name="title"
+        id=""
+        placeholder="Assignment Title"
+        required
+      />
+      <br />
+      <textarea
+        name="description"
+        id=""
+        placeholder="Assignment Description"
+      ></textarea>
+      <br />
+      <input type="file" name="file" id="" placeholder="Select File" />
+      <br />
+      <% if (classs.subjects.length > 0) { %>
+      <select name="subject" id="subjects">
+        <option value="" disabled>---SELECT SUBJECT---</option>
+        <% classs.subjects.forEach(subject => { %>
+        <option value="<%= subject %>"><%= subject %></option>
+        <% }) %>
+      </select>
+      <br />
+      <% } %>
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>
