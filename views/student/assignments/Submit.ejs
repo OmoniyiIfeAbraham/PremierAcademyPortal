@@ -10,7 +10,11 @@
 
     <p><%= msg %></p>
 
-    <form action="/portal/student/dashboard/assignments/add" method="post">
+    <form
+      action="/portal/student/dashboard/assignments/add"
+      method="post"
+      enctype="multipart/form-data"
+    >
       <input
         type="text"
         name="title"
@@ -25,7 +29,7 @@
         placeholder="Assignment Description"
       ></textarea>
       <br />
-      <input type="file" name="file" id="" placeholder="Select File" />
+      <input type="file" name="file" id="" />
       <br />
       <% if (classs.subjects.length > 0) { %>
       <select name="subject" id="subjects">

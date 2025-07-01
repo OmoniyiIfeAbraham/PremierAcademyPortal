@@ -23,7 +23,7 @@
       <tr>
         <td><%= assignment.id.slice(5, 8) %>***</td>
         <td><%= assignment.title %></td>
-        <% subjects.forEach(subject => { %> <% if (subject.id === assignment.subject) {
+        <% subjects.forEach(subject => { %> <% if (subject.title === assignment.subject) {
         %>
         <td><%= subject.title %></td>
         <% } %> <% }) %> <% classes.forEach(clas => { %> <% if (clas.id ===
