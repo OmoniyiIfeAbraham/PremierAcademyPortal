@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment Page</title>
+  </head>
+  <body>
+    <h1>Assignment Title: <%= assignment.title %></h1>
+    <p><%= assignment.description %></p>
+    <% if (assignment.filePublicId.slice(0, 38).includes('Docum')) { %>
+    <iframe
+      src="https://docs.google.com/gview?url=<%= assignment.file %>&embedded=true"
+      style="width: 250px; height: 250px"
+      frameborder="0"
+    >
+    </iframe>
+
+    <% } else { %>
+    <img
+      src="<%= assignment.file %>"
+      alt="Assignment File"
+      style="width: 250px; height: 250px"
+    />
+    <% } %>
+    <p><%= assignment.subject %></p>
+    <% if (classes.length > 0) { %> <% classes.forEach(classs => { %> <% if
+    (classs.id === assignment.class) { %> <%= classs.name %> <% } %> <% }) %> <%
+    } %>
+    <p>Score: <b><%= assignment.score %> / <%= assignment.grade %></b></p>
+    <p><b>Comment: </b> <%= assignment.comment %></p>
+  </body>
+</html>

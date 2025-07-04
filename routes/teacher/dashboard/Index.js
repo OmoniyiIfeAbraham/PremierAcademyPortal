@@ -4,33 +4,54 @@ const ClassDetailModel = require("../../../models/Classes/ClassDetail.model");
 const InfoModel = require("../../../models/Assignments/Info.model");
 const DetailModel = require("../../../models/Subjects/Detail.model");
 const cloudinary = require("cloudinary");
+const ProfileModel = require("../../../models/Teachers/Profile.model");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   const sess = req.session;
-  if (sess.email && sess.password && sess.identifier === "student") {
-    const student = await StudentProfileModel.findOne({ email: sess.email });
-    const classs = await ClassDetailModel.findById(student.class);
-    res.render("student/dashboard/Dashboard", { student, classs });
+  if (sess.email && sess.password && sess.identifier === "teacher") {
+    const teacher = await ProfileModel.findOne({ email: sess.email });
+    // console.log("Teacher: ", teacher);
+    res.render("teacher/dashboard/Dashboard", { teacher });
   } else {
     res.redirect("/");
   }
 });
 
-router.get("/assignments", async (req, res) => {
+router.get("/view/:subject", async (req, res) => {
   const sess = req.session;
-  if (sess.email && sess.password && sess.identifier === "student") {
-    const student = await StudentProfileModel.findOne({ email: sess.email });
-    const assignments = await InfoModel.find({ student: student._id }).sort({
-      createdAt: -1,
-    });
+  const sub = req.params.subject;
+  if (sess.email && sess.password && sess.identifier === "teacher") {
+    const assignments = await InfoModel.find({ subject: sub });
+    const students = await StudentProfileModel.find({});
     const classes = await ClassDetailModel.find({});
-    const subjects = await DetailModel.find({});
-    res.render("student/assignments/Index", { assignments, classes, subjects });
+    // console.log("Assignments: ", assignments);
+    // console.log("Students: ", students);
+    res.render("teacher/assignments/Assignments", {
+      assignments,
+      students,
+      classes,
+    });
   } else {
     res.redirect("/");
   }
 });
+
+router.get("/assignment/view/:id", async (req, res) => {
+  const sess = req.session;
+  const id = req.params.id;
+  if (sess.email && sess.password && sess.identifier === "student") {
+    const assignment = await InfoModel.findById(id);
+    const classes = await ClassDetailModel.find({});
+    res.render("student/assignments/View", { assignment, classes });
+  } else {
+    res.redirect("/");
+  }
+});
+
+
+//////////////////
+
 
 router.get("/assignments/add", async (req, res) => {
   const sess = req.session;
@@ -157,18 +178,6 @@ router.post("/assignments/add", async (req, res) => {
         student,
       });
     }
-  } else {
-    res.redirect("/");
-  }
-});
-
-router.get("/assignment/view/:id", async (req, res) => {
-  const sess = req.session;
-  const id = req.params.id;
-  if (sess.email && sess.password && sess.identifier === "student") {
-    const assignment = await InfoModel.findById(id);
-    const classes = await ClassDetailModel.find({});
-    res.render("student/assignments/View", { assignment, classes });
   } else {
     res.redirect("/");
   }

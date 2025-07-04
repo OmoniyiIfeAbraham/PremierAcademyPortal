@@ -78,3 +78,9 @@ app.use(
   "/portal/student/dashboard",
   require("./routes/student/dashboard/Index")
 );
+// TEACHER
+app.use("/portal/teacher/auth/login", require("./routes/teacher/auth/Login"));
+app.use(
+  "/portal/teacher/dashboard",
+  require("./routes/teacher/dashboard/Index")
+);

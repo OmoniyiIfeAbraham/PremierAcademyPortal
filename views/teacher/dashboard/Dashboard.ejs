@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1><%= teacher.name %> Dashboard</h1>
+    <p><b>Email: </b><%= teacher.email %></p>
+    <p><b>Phone Number: </b><%= teacher.phone %></p>
+    <h3>Classes:</h3>
+    <% if (teacher.classes.length > 0) { %>
+    <ol>
+      <% teacher.classes.forEach(classs => { %>
+      <li><%= classs %></li>
+      <% }) %>
+    </ol>
+    <% } %>
+    <h3>Subjects:</h3>
+    <% if (teacher.subjects.length > 0) { %>
+    <ol>
+      <% teacher.subjects.forEach(subject => { %>
+      <li>
+        <a href="/portal/teacher/dashboard/view/<%= subject %>"
+          ><%= subject %></a
+        >
+      </li>
+      <% }) %>
+    </ol>
+    <% } %>
+    <h3>Role: <%= teacher.role %></h3>
+  </body>
+</html>

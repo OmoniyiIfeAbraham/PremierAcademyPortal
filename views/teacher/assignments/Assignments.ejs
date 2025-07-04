@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1><%= assignments[0]?.subject %> Assignments</h1>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Student</th>
+        <th>Title</th>
+        <th>Class</th>
+        <th>View</th>
+        <th>Delete</th>
+      </tr>
+      <% if (assignments.length > 0) { %> <% assignments.forEach(assignment => {
+      %>
+      <tr>
+        <td><%= assignment.id.slice(5, 8) %>***</td>
+        <% if(students.length > 0) { %> <% students.forEach(student => { %> <%
+        if(student.id === assignment.student) { %>
+        <td><%= student.name %></td>
+        <% } %> <% }) %> <% } %>
+        <td><%= assignment.title %></td>
+        <% if(classes.length > 0) { %> <% classes.forEach(classs => { %> <%
+        if(classs.id === assignment.class) { %>
+        <td><%= classs.name %></td>
+        <% } %> <% }) %> <% } %>
+        <td><a href="">View</a></td>
+        <td><a href="">Delete</a></td>
+      </tr>
+      <% }) %> <% } else { %>
+      <tr>
+        <td>----</td>
+        <td>----</td>
+        <td>----</td>
+        <td>----</td>
+        <td>----</td>
+        <td>----</td>
+      </tr>
+      <% } %>
+    </table>
+  </body>
+</html>
