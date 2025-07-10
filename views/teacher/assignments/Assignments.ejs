@@ -13,6 +13,7 @@
         <th>Student</th>
         <th>Title</th>
         <th>Class</th>
+        <th>Score</th>
         <th>View</th>
         <th>Delete</th>
       </tr>
@@ -29,11 +30,18 @@
         if(classs.id === assignment.class) { %>
         <td><%= classs.name %></td>
         <% } %> <% }) %> <% } %>
-        <td><a href="">View</a></td>
-        <td><a href="">Delete</a></td>
+        <td><%= assignment.score %> / <%= assignment.grade %></td>
+        <td>
+          <a
+            href="/portal/teacher/dashboard/assignment/view/<%= assignment.id %>"
+            >View</a
+          >
+        </td>
+        <td><a href="/portal/teacher/dashboard/assignment/delete/<%= assignment.id %>">Delete</a></td>
       </tr>
       <% }) %> <% } else { %>
       <tr>
+        <td>----</td>
         <td>----</td>
         <td>----</td>
         <td>----</td>

@@ -29,5 +29,24 @@
     } %>
     <p>Score: <b><%= assignment.score %> / <%= assignment.grade %></b></p>
     <p><b>Comment: </b> <%= assignment.comment %></p>
+
+    <p><%= msg %></p>
+    <form
+      action="/portal/teacher/dashboard/assignment/update/<%= assignment.id %>"
+      method="post"
+    >
+      <input type="number" name="score" id="" placeholder="Score" />
+      <br />
+      <input
+        type="number"
+        name="grade"
+        id=""
+        placeholder="Max Possible Grade"
+      />
+      <br />
+      <textarea name="comment" id="" placeholder="Comment"></textarea>
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
   </body>
 </html>
