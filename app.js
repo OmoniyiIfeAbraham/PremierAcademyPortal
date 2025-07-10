@@ -52,6 +52,9 @@ app.use(express.static("public"));
 
 // ROUTES
 // Admin
+app.get("/admin", (req, res) => {
+  res.redirect("/portal/admin/auth/login");
+});
 app.use("/portal/admin/auth/login", require("./routes/admin/auth/Login"));
 app.use("/portal/admin/dashboard", require("./routes/admin/dashboard/Index"));
 app.use(

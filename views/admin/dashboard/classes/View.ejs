@@ -3,31 +3,452 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Classes Management - Admin Portal</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 30px 40px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+        }
+      }
+
+      .header-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header h1 i {
+        margin-right: 15px;
+        font-size: 2.2rem;
+      }
+
+      .add-btn {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        text-decoration: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+      }
+
+      .add-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-top: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #374151;
+        font-weight: 600;
+        padding: 20px;
+        text-align: left;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid #e5e7eb;
+      }
+
+      td {
+        padding: 20px;
+        border-bottom: 1px solid #f3f4f6;
+        transition: all 0.3s ease;
+      }
+
+      tr:hover td {
+        background: #f8fafc;
+        transform: scale(1.01);
+      }
+
+      .id-badge {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: inline-block;
+        min-width: 80px;
+        text-align: center;
+      }
+
+      .class-name {
+        font-weight: 600;
+        color: #374151;
+        font-size: 1.1rem;
+      }
+
+      .view-btn {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+      }
+
+      .view-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6b7280;
+      }
+
+      .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #d1d5db;
+      }
+
+      .empty-state h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #374151;
+      }
+
+      .empty-state p {
+        font-size: 1rem;
+        margin-bottom: 30px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-card i {
+        font-size: 2.5rem;
+        color: #6366f1;
+        margin-bottom: 15px;
+      }
+
+      .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 5px;
+      }
+
+      .stat-card p {
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .header {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header-content {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .table-container {
+          overflow-x: auto;
+        }
+
+        table {
+          min-width: 500px;
+        }
+
+        th,
+        td {
+          padding: 15px 10px;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .add-btn {
+          padding: 12px 20px;
+          font-size: 0.9rem;
+        }
+
+        th,
+        td {
+          padding: 12px 8px;
+        }
+
+        .id-badge {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+        }
+
+        .view-btn {
+          padding: 10px 15px;
+          font-size: 0.85rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Classes</h1>
-    <a href="/portal/admin/dashboard/classes/add">Add Class</a>
+    <div class="container">
+      <div class="header">
+        <div class="header-content">
+          <h1>
+            <i class="fas fa-graduation-cap"></i>
+            Classes Management
+          </h1>
+          <a href="/portal/admin/dashboard/classes/add" class="add-btn">
+            <i class="fas fa-plus"></i>
+            Add New Class
+          </a>
+        </div>
+      </div>
 
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Class Name</th>
-        <th>View</th>
-      </tr>
-      <% if (classes.length > 0) { %> <% classes.forEach(classs => { %>
-      <tr>
-        <td><%= classs.id.slice(5, 8) %>***</td>
-        <td><%= classs.name %></td>
-        <td><a href="/portal/admin/dashboard/classes/view/<%= classs._id %>">View</td>
-      </tr>
-      <% }) %> <% } else { %>
-      <tr>
-        <td>---</td>
-        <td>---</td>
-        <td>---</td>
-      </tr>
-      <% } %>
-    </table>
+      <div class="content">
+        <div class="stats">
+          <div class="stat-card">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <h3><%= classes.length %></h3>
+            <p>Total Classes</p>
+          </div>
+          <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <h3>Active</h3>
+            <p>Status</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <% if (classes.length > 0) { %>
+          <table>
+            <thead>
+              <tr>
+                <th><i class="fas fa-hashtag"></i> Class ID</th>
+                <th><i class="fas fa-book"></i> Class Name</th>
+                <th><i class="fas fa-eye"></i> Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% classes.forEach(classs => { %>
+              <tr>
+                <td>
+                  <span class="id-badge"><%= classs.id.slice(5, 8) %>***</span>
+                </td>
+                <td>
+                  <span class="class-name"><%= classs.name %></span>
+                </td>
+                <td>
+                  <a
+                    href="/portal/admin/dashboard/classes/view/<%= classs._id %>"
+                    class="view-btn"
+                  >
+                    <i class="fas fa-eye"></i>
+                    View Details
+                  </a>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-chalkboard"></i>
+            <h3>No Classes Found</h3>
+            <p>
+              You haven't created any classes yet. Start by adding your first
+              class!
+            </p>
+            <a href="/portal/admin/dashboard/classes/add" class="add-btn">
+              <i class="fas fa-plus"></i>
+              Create First Class
+            </a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Add smooth scrolling and enhanced interactions
+      document.addEventListener("DOMContentLoaded", function () {
+        // Animate table rows on load
+        const rows = document.querySelectorAll("tbody tr");
+        rows.forEach((row, index) => {
+          row.style.opacity = "0";
+          row.style.transform = "translateY(20px)";
+          setTimeout(() => {
+            row.style.transition = "all 0.5s ease";
+            row.style.opacity = "1";
+            row.style.transform = "translateY(0)";
+          }, index * 100);
+        });
+
+        // Add click ripple effect to buttons
+        document.querySelectorAll(".add-btn, .view-btn").forEach((button) => {
+          button.addEventListener("click", function (e) {
+            const ripple = document.createElement("span");
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + "px";
+            ripple.style.left = x + "px";
+            ripple.style.top = y + "px";
+            ripple.style.position = "absolute";
+            ripple.style.borderRadius = "50%";
+            ripple.style.backgroundColor = "rgba(255, 255, 255, 0.5)";
+            ripple.style.transform = "scale(0)";
+            ripple.style.animation = "ripple 0.6s linear";
+            ripple.style.pointerEvents = "none";
+
+            this.style.position = "relative";
+            this.style.overflow = "hidden";
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+              ripple.remove();
+            }, 600);
+          });
+        });
+
+        // Add CSS for ripple animation
+        const style = document.createElement("style");
+        style.textContent = `
+          @keyframes ripple {
+            to {
+              transform: scale(4);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      });
+    </script>
   </body>
 </html>
