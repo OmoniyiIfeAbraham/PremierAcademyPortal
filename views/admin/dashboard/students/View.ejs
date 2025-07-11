@@ -3,46 +3,836 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Students - Admin Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .header h1 {
+        color: #2d3748;
+        font-size: 32px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header h1::before {
+        content: "👥";
+        font-size: 28px;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.9);
+        color: #4a5568;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+        font-size: 14px;
+        color: #718096;
+      }
+
+      .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .breadcrumb a:hover {
+        color: #764ba2;
+      }
+
+      .breadcrumb-separator {
+        color: #cbd5e0;
+      }
+
+      .search-filter-section {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+        position: relative;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 12px 16px 12px 44px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        background: #ffffff;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+        font-size: 16px;
+      }
+
+      .filter-dropdown {
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 14px;
+        background: #ffffff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 150px;
+      }
+
+      .filter-dropdown:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-card .icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: block;
+      }
+
+      .stat-card .number {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 4px;
+      }
+
+      .stat-card .label {
+        font-size: 12px;
+        color: #718096;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .table-container {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .table th {
+        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        color: #2d3748;
+        font-weight: 600;
+        padding: 16px 12px;
+        text-align: left;
+        border-bottom: 2px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .table td {
+        padding: 16px 12px;
+        border-bottom: 1px solid #f7fafc;
+        color: #4a5568;
+        vertical-align: middle;
+      }
+
+      .table tbody tr {
+        transition: all 0.3s ease;
+      }
+
+      .table tbody tr:hover {
+        background: rgba(102, 126, 234, 0.05);
+        transform: scale(1.002);
+      }
+
+      .table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .student-id {
+        font-family: "Courier New", monospace;
+        background: rgba(102, 126, 234, 0.1);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        color: #667eea;
+        font-weight: 600;
+      }
+
+      .student-name {
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .student-email {
+        color: #718096;
+        font-size: 13px;
+      }
+
+      .student-phone {
+        color: #718096;
+        font-size: 13px;
+      }
+
+      .class-badge {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .btn-small {
+        padding: 6px 12px;
+        font-size: 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .btn-view {
+        background: rgba(66, 153, 225, 0.1);
+        color: #3182ce;
+        border: 1px solid rgba(66, 153, 225, 0.2);
+      }
+
+      .btn-view:hover {
+        background: rgba(66, 153, 225, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .btn-edit {
+        background: rgba(237, 137, 54, 0.1);
+        color: #dd6b20;
+        border: 1px solid rgba(237, 137, 54, 0.2);
+      }
+
+      .btn-edit:hover {
+        background: rgba(237, 137, 54, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .btn-delete {
+        background: rgba(245, 101, 101, 0.1);
+        color: #e53e3e;
+        border: 1px solid rgba(245, 101, 101, 0.2);
+      }
+
+      .btn-delete:hover {
+        background: rgba(245, 101, 101, 0.2);
+        transform: translateY(-1px);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #718096;
+      }
+
+      .empty-state .icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      .empty-state h3 {
+        color: #2d3748;
+        margin-bottom: 8px;
+        font-size: 20px;
+      }
+
+      .empty-state p {
+        margin-bottom: 24px;
+        font-size: 14px;
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+      }
+
+      .pagination-btn {
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #4a5568;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+
+      .pagination-btn:hover {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+      }
+
+      .pagination-btn.active {
+        background: #667eea;
+        color: white;
+      }
+
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 40px;
+        color: #718096;
+      }
+
+      .loading.active {
+        display: block;
+      }
+
+      .spinner {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border: 3px solid #e2e8f0;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .animation-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+          margin: 10px;
+        }
+
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .header h1 {
+          font-size: 24px;
+        }
+
+        .search-filter-section {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .search-box {
+          min-width: auto;
+        }
+
+        .stats-cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .table-container {
+          overflow-x: auto;
+        }
+
+        .table {
+          min-width: 600px;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+          gap: 4px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .stats-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .table th,
+        .table td {
+          padding: 12px 8px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Students</h1>
-    <a href="/portal/admin/dashboard/students/add">Add Student</a>
+    <div class="container animation-fade-in">
+      <nav class="breadcrumb">
+        <a href="/portal/admin/dashboard">Dashboard</a>
+        <span class="breadcrumb-separator">›</span>
+        <span>Students</span>
+      </nav>
 
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>FullName</th>
-        <th>Email</th>
-        <th>Phone Number</th>
-        <th>Class</th>
-        <th>View</th>
-      </tr>
-      <% if (students.length > 0) { %> <% students.forEach(student => { %>
-      <tr>
-        <td><%= student.id.slice(5, 8) %>***</td>
-        <td><%= student.name %></td>
-        <td><%= student.email %></td>
-        <td><%= student.phone %></td>
-        <% classes.forEach(clas => { %> <% if (clas.id === student.class) { %>
-        <td><%= clas.name %></td>
-        <% } %> <% }) %>
-        <td>
-          <a href="/portal/admin/dashboard/students/view/<%= student._id %>"
-            >View</a
-          >
-        </td>
-      </tr>
-      <% }) %> <% } else { %>
-      <tr>
-        <td>---</td>
-        <td>---</td>
-        <td>---</td>
-        <td>---</td>
-        <td>---</td>
-        <td>---</td>
-      </tr>
+      <div class="header">
+        <h1>Students</h1>
+        <div class="header-actions">
+          <button class="btn btn-secondary" onclick="exportData()">
+            📊 Export
+          </button>
+          <a href="/portal/admin/dashboard/students/add" class="btn">
+            ➕ Add Student
+          </a>
+        </div>
+      </div>
+
+      <div class="stats-cards">
+        <div class="stat-card">
+          <span class="icon">👥</span>
+          <div class="number" id="totalStudents"><%= students.length %></div>
+          <div class="label">Total Students</div>
+        </div>
+        <div class="stat-card">
+          <span class="icon">🎓</span>
+          <div class="number" id="activeClasses"><%= classes.length %></div>
+          <div class="label">Active Classes</div>
+        </div>
+        <div class="stat-card">
+          <span class="icon">📈</span>
+          <div class="number" id="newThisMonth">0</div>
+          <div class="label">New This Month</div>
+        </div>
+        <div class="stat-card">
+          <span class="icon">⭐</span>
+          <div class="number" id="averageGrade">-</div>
+          <div class="label">Average Grade</div>
+        </div>
+      </div>
+
+      <div class="search-filter-section">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search students by name, email, or phone..."
+            id="searchInput"
+          />
+        </div>
+        <select class="filter-dropdown" id="classFilter">
+          <option value="">All Classes</option>
+          <% classes.forEach(clas => { %>
+          <option value="<%= clas._id %>"><%= clas.name %></option>
+          <% }) %>
+        </select>
+        <select class="filter-dropdown" id="sortFilter">
+          <option value="name">Sort by Name</option>
+          <option value="email">Sort by Email</option>
+          <option value="class">Sort by Class</option>
+          <option value="recent">Most Recent</option>
+        </select>
+      </div>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        Loading students...
+      </div>
+
+      <div class="table-container">
+        <% if (students.length > 0) { %>
+        <table class="table" id="studentsTable">
+          <thead>
+            <tr>
+              <th>Student ID</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Class</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <% students.forEach(student => { %>
+            <tr class="student-row" data-student-id="<%= student._id %>">
+              <td>
+                <span class="student-id"
+                  ><%= student.id ? student.id.slice(5, 8) : 'N/A' %>***</span
+                >
+              </td>
+              <td>
+                <div class="student-name"><%= student.name %></div>
+              </td>
+              <td>
+                <div class="student-email">
+                  <%= student.email || 'Not provided' %>
+                </div>
+              </td>
+              <td>
+                <div class="student-phone">
+                  <%= student.phone || 'Not provided' %>
+                </div>
+              </td>
+              <td>
+                <% let className = 'Unassigned'; %> <% classes.forEach(clas => {
+                %> <% if (clas.id === student.class || clas._id.toString() ===
+                student.class.toString()) { %> <% className = clas.name; %> <% }
+                %> <% }) %>
+                <span class="class-badge"><%= className %></span>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <a
+                    href="/portal/admin/dashboard/students/view/<%= student._id %>"
+                    class="btn-small btn-view"
+                  >
+                    👁️ View
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+        <% } else { %>
+        <div class="empty-state">
+          <div class="icon">📚</div>
+          <h3>No Students Found</h3>
+          <p>
+            You haven't added any students yet. Get started by adding your first
+            student!
+          </p>
+          <a href="/portal/admin/dashboard/students/add" class="btn">
+            ➕ Add First Student
+          </a>
+        </div>
+        <% } %>
+      </div>
+
+      <% if (students.length > 10) { %>
+      <div class="pagination">
+        <button class="pagination-btn" onclick="changePage(-1)">
+          « Previous
+        </button>
+        <button class="pagination-btn active">1</button>
+        <button class="pagination-btn">2</button>
+        <button class="pagination-btn">3</button>
+        <button class="pagination-btn" onclick="changePage(1)">Next »</button>
+      </div>
       <% } %>
-    </table>
+    </div>
+
+    <script>
+      const searchInput = document.getElementById('searchInput');
+      const classFilter = document.getElementById('classFilter');
+      const sortFilter = document.getElementById('sortFilter');
+      const tableBody = document.getElementById('tableBody');
+      const loading = document.getElementById('loading');
+
+      let studentsData = [];
+      let filteredData = [];
+      let currentPage = 1;
+      const itemsPerPage = 10;
+
+      // Initialize students data
+      <% if (students.length > 0) { %>
+        studentsData = [
+          <% students.forEach((student, index) => { %>
+            {
+              id: '<%= student._id %>',
+              name: '<%= student.name %>',
+              email: '<%= student.email || "" %>',
+              phone: '<%= student.phone || "" %>',
+              class: '<%= student.class %>',
+              displayId: '<%= student.id ? student.id.slice(5, 8) : "N/A" %>***'
+            }<%= index < students.length - 1 ? ',' : '' %>
+          <% }) %>
+        ];
+      <% } %>
+
+      filteredData = [...studentsData];
+
+      // Search functionality
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        filterAndSort();
+      });
+
+      // Filter functionality
+      classFilter.addEventListener('change', filterAndSort);
+      sortFilter.addEventListener('change', filterAndSort);
+
+      function filterAndSort() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedClass = classFilter.value;
+        const sortBy = sortFilter.value;
+
+        // Filter
+        filteredData = studentsData.filter(student => {
+          const matchesSearch = student.name.toLowerCase().includes(searchTerm) ||
+                               student.email.toLowerCase().includes(searchTerm) ||
+                               student.phone.toLowerCase().includes(searchTerm);
+
+          const matchesClass = !selectedClass || student.class === selectedClass;
+
+          return matchesSearch && matchesClass;
+        });
+
+        // Sort
+        filteredData.sort((a, b) => {
+          switch(sortBy) {
+            case 'name':
+              return a.name.localeCompare(b.name);
+            case 'email':
+              return a.email.localeCompare(b.email);
+            case 'class':
+              return a.class.localeCompare(b.class);
+            case 'recent':
+              return b.id.localeCompare(a.id);
+            default:
+              return 0;
+          }
+        });
+
+        updateTable();
+      }
+
+      function updateTable() {
+        if (filteredData.length === 0) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="empty-state" style="padding: 40px; text-align: center;">
+                <div style="color: #718096;">
+                  <div style="font-size: 32px; margin-bottom: 16px;">🔍</div>
+                  <h3 style="color: #2d3748; margin-bottom: 8px;">No students found</h3>
+                  <p>Try adjusting your search or filter criteria.</p>
+                </div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        // Update table with filtered data
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const pageData = filteredData.slice(startIndex, endIndex);
+
+        let studentClass;
+
+        pageData.forEach(student => {
+          studentClass = classes.find(c => c._id === student.class);
+        });
+
+        tableBody.innerHTML = pageData.map(student => `
+          <tr class="student-row" data-student-id="${student.id}">
+            <td><span class="student-id">${student.displayId}</span></td>
+            <td><div class="student-name">${student.name}</div></td>
+            <td><div class="student-email">${student.email || 'Not provided'}</div></td>
+            <td><div class="student-phone">${student.phone || 'Not provided'}</div></td>
+            <td><div class="student-class">${studentClass ? studentClass.name : 'Unknown'}</div></td>
+            <td>
+              <div class="action-buttons">
+                <a href="/portal/admin/dashboard/students/view/${student.id}" class="btn-small btn-view">👁️ View</a>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      function exportData() {
+        const csvContent = "data:text/csv;charset=utf-8," +
+          "Name,Email,Phone,Class\n" +
+          filteredData.map(student =>
+            `"${student.name}","${student.email}","${student.phone}","${student.class}"`
+          ).join("\n");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "students.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      function changePage(direction) {
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+        if (direction === -1 && currentPage > 1) {
+          currentPage--;
+        } else if (direction === 1 && currentPage < totalPages) {
+          currentPage++;
+        }
+
+        updateTable();
+      }
+
+      // Initialize table on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        updateTable();
+      });
+    </script>
   </body>
 </html>

@@ -65,8 +65,9 @@ router.get("/view/:id", async (req, res) => {
   const id = req.params.id;
   if (sess.email && sess.password && sess.identifier === "admin") {
     const classs = await ClassDetailModel.findById(id);
+    const teachers = await ProfileModel.find({});
     console.log(classs);
-    res.render("admin/dashboard/classes/ViewSingle", { classs });
+    res.render("admin/dashboard/classes/ViewSingle", { classs, teachers });
   } else {
     res.redirect("/portal/admin/auth/login");
   }

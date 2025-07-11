@@ -3,25 +3,406 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title><%= student.name %> - Dashboard</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: slideUp 0.6s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        animation: rotate 20s linear infinite;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .header .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        position: relative;
+        z-index: 1;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        padding: 32px;
+      }
+
+      .info-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #f3f4f6;
+      }
+
+      .card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      .personal-info .card-icon {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      }
+
+      .academic-info .card-icon {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      }
+
+      .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f9fafb;
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .info-label {
+        font-weight: 500;
+        color: #6b7280;
+        min-width: 80px;
+        margin-right: 16px;
+      }
+
+      .info-value {
+        color: #1f2937;
+        font-weight: 400;
+        flex: 1;
+      }
+
+      .subjects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .subject-tag {
+        background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%);
+        color: #5b21b6;
+        padding: 8px 16px;
+        border-radius: 20px;
+        text-align: center;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: transform 0.2s ease;
+      }
+
+      .subject-tag:hover {
+        transform: scale(1.05);
+      }
+
+      .actions-section {
+        grid-column: 1 / -1;
+        margin-top: 16px;
+      }
+
+      .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+      }
+
+      .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 24px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn-edit {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+      }
+
+      .btn-edit:hover {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+      }
+
+      .btn-password {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+      }
+
+      .btn-password:hover {
+        background: linear-gradient(135deg, #e3a008 0%, #c2410c 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+      }
+
+      .btn-delete {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+      }
+
+      .btn-delete:hover {
+        background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+      }
+
+      .btn-icon {
+        margin-right: 8px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .content-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+          padding: 24px;
+        }
+
+        .header {
+          padding: 24px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .actions-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .subjects-grid {
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 12px;
+        }
+
+        .dashboard-container {
+          border-radius: 16px;
+        }
+
+        .header h1 {
+          font-size: 1.8rem;
+        }
+
+        .content-grid {
+          padding: 16px;
+        }
+
+        .info-card {
+          padding: 20px;
+        }
+
+        .card-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 1.2rem;
+        }
+
+        .subjects-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1><%= student.name %> Dashboard</h1>
-    <p>Email: <%= student.email %></p>
-    <p>Phone Number: <%= student.phone %></p>
-    <p>Class: <%= classs.name %></p>
-    <h2>Subjects</h2>
-    <ol>
-      <% classs?.subjects?.forEach(subject => { %>
-      <li><%= subject %></li>
-      <% }) %>
-    </ol>
-    <a href="/portal/admin/dashboard/students/edit/<%= student._id %>">Edit</a>
-    <a href="/portal/admin/dashboard/students/edit_password/<%= student._id %>"
-      >Change Password</a
-    >
-    <a href="/portal/admin/dashboard/students/delete/<%= student._id %>"
-      >Delete</a
-    >
+    <div class="dashboard-container">
+      <div class="header">
+        <h1><%= student.name %></h1>
+        <p class="subtitle">Student Dashboard</p>
+      </div>
+
+      <div class="content-grid">
+        <div class="info-card personal-info">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <h2 class="card-title">Personal Information</h2>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value"><%= student.email %></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Phone:</span>
+            <span class="info-value"><%= student.phone %></span>
+          </div>
+        </div>
+
+        <div class="info-card academic-info">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2 class="card-title">Academic Information</h2>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Class:</span>
+            <span class="info-value"><%= classs.name %></span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Subjects:</span>
+          </div>
+          <div class="subjects-grid">
+            <% classs?.subjects?.forEach(subject => { %>
+            <div class="subject-tag"><%= subject %></div>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="actions-section">
+          <div class="info-card">
+            <div class="card-header">
+              <div
+                class="card-icon"
+                style="
+                  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+                "
+              >
+                <i class="fas fa-cogs"></i>
+              </div>
+              <h2 class="card-title">Actions</h2>
+            </div>
+            <div class="actions-grid">
+              <a
+                href="/portal/admin/dashboard/students/edit/<%= student._id %>"
+                class="action-btn btn-edit"
+              >
+                <i class="fas fa-edit btn-icon"></i>
+                Edit Profile
+              </a>
+              <a
+                href="/portal/admin/dashboard/students/edit_password/<%= student._id %>"
+                class="action-btn btn-password"
+              >
+                <i class="fas fa-key btn-icon"></i>
+                Change Password
+              </a>
+              <a
+                href="/portal/admin/dashboard/students/delete/<%= student._id %>"
+                class="action-btn btn-delete"
+                onclick="return confirm('Are you sure you want to delete this student?')"
+              >
+                <i class="fas fa-trash btn-icon"></i>
+                Delete Student
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

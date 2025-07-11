@@ -3,44 +3,633 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Add Student - Admin Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(180deg); }
+      }
+
+      .header-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header h1 i {
+        margin-right: 15px;
+        font-size: 2.2rem;
+      }
+
+      .header .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        padding: 15px 20px;
+        background: #f8fafc;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: #6b7280;
+      }
+
+      .breadcrumb a {
+        color: #6366f1;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .breadcrumb a:hover {
+        color: #4f46e5;
+      }
+
+      .message {
+        margin-bottom: 20px;
+        padding: 15px 20px;
+        border-radius: 10px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .message.success {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+        border: 1px solid #34d399;
+      }
+
+      .message.error {
+        background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+        color: #991b1b;
+        border: 1px solid #f87171;
+      }
+
+      .message.info {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+        border: 1px solid #60a5fa;
+      }
+
+      .form-container {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        position: relative;
+      }
+
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f9fafb;
+        color: #374151;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #6366f1;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .form-group input::placeholder {
+        color: #9ca3af;
+      }
+
+      .form-group select {
+        cursor: pointer;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 12px center;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        padding-right: 50px;
+        appearance: none;
+      }
+
+      .form-group select:focus {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236366f1' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      }
+
+      .form-group .input-icon {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 1.1rem;
+        pointer-events: none;
+        transition: color 0.3s ease;
+      }
+
+      .form-group input:focus + .input-icon {
+        color: #6366f1;
+      }
+
+      .form-group input.with-icon {
+        padding-left: 50px;
+      }
+
+      .password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+      }
+
+      .password-toggle:hover {
+        color: #6366f1;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+      }
+
+      .submit-btn:active {
+        transform: translateY(0);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .form-footer {
+        margin-top: 30px;
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .back-btn {
+        color: #6366f1;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.3s ease;
+      }
+
+      .back-btn:hover {
+        color: #4f46e5;
+      }
+
+      .required-note {
+        background: #f0f9ff;
+        border: 1px solid #bae6fd;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 25px;
+        font-size: 0.9rem;
+        color: #0c4a6e;
+      }
+
+      .loading {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        animation: loading 1.5s infinite;
+      }
+
+      @keyframes loading {
+        0% { left: -100%; }
+        100% { left: 100%; }
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+
+        .header {
+          padding: 30px 20px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .form-container {
+          padding: 25px;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .form-group input,
+        .form-group select {
+          padding: 12px 15px;
+        }
+
+        .form-group input.with-icon {
+          padding-left: 40px;
+        }
+
+        .form-group .input-icon {
+          left: 12px;
+        }
+
+        .submit-btn {
+          padding: 15px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+          padding: 10px 12px;
+        }
+
+        .form-group input.with-icon {
+          padding-left: 35px;
+        }
+
+        .form-group .input-icon {
+          left: 10px;
+          font-size: 1rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Add Student</h1>
+    <div class="container">
+      <div class="header">
+        <div class="header-content">
+          <h1>
+            <i class="fas fa-user-plus"></i>
+            Add New Student
+          </h1>
+          <p class="subtitle">Register a new student to the system</p>
+        </div>
+      </div>
 
-    <p><%= msg %></p>
+      <div class="content">
+        <div class="breadcrumb">
+          <a href="/portal/admin/dashboard">
+            <i class="fas fa-home"></i> Dashboard
+          </a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="/portal/admin/dashboard/students">Students</a>
+          <i class="fas fa-chevron-right"></i>
+          <span>Add Student</span>
+        </div>
 
-    <form action="/portal/admin/dashboard/students/add" method="post">
-      <input type="text" name="name" id="" placeholder="Fullname" required />
-      <br />
-      <input type="email" name="email" id="" placeholder="Email" required />
-      <br />
-      <input
-        type="password"
-        name="password"
-        id=""
-        placeholder="Password"
-        required
-      />
-      <br />
-      <input
-        type="tel"
-        name="phone"
-        id=""
-        placeholder="Phone Number"
-        required
-      />
-      <br />
-      <% if (classes.length > 0) { %>
-      <select name="class" id="classes">
-        <option value="" disabled>---SELECT CLASS---</option>
-        <% classes.forEach(clas => { %>
-        <option value="<%= clas._id %>"><%= clas.name %></option>
-        <% }) %>
-      </select>
-      <br />
-      <% } %>
-      <input type="submit" value="Add" />
-    </form>
+        <% if (msg && msg.trim() !== '') { %>
+          <div class="message <%= msg.toLowerCase().includes('error') || msg.toLowerCase().includes('failed') ? 'error' : msg.toLowerCase().includes('success') || msg.toLowerCase().includes('added') ? 'success' : 'info' %>">
+            <i class="fas <%= msg.toLowerCase().includes('error') || msg.toLowerCase().includes('failed') ? 'fa-exclamation-triangle' : msg.toLowerCase().includes('success') || msg.toLowerCase().includes('added') ? 'fa-check-circle' : 'fa-info-circle' %>"></i>
+            <%= msg %>
+          </div>
+        <% } %>
+
+        <div class="form-container">
+          <div class="required-note">
+            <i class="fas fa-info-circle"></i>
+            All fields marked with <strong>*</strong> are required. Please ensure all information is accurate before submitting.
+          </div>
+
+          <form action="/portal/admin/dashboard/students/add" method="post" id="studentForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="name">
+                  <i class="fas fa-user"></i> Full Name *
+                </label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  id="name" 
+                  placeholder="Enter student's full name"
+                  class="with-icon"
+                  required 
+                  autocomplete="name"
+                />
+                <i class="fas fa-user input-icon"></i>
+              </div>
+
+              <div class="form-group">
+                <label for="email">
+                  <i class="fas fa-envelope"></i> Email Address *
+                </label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  id="email" 
+                  placeholder="Enter email address"
+                  class="with-icon"
+                  required 
+                  autocomplete="email"
+                />
+                <i class="fas fa-envelope input-icon"></i>
+              </div>
+
+              <div class="form-group">
+                <label for="password">
+                  <i class="fas fa-lock"></i> Password *
+                </label>
+                <input 
+                  type="password" 
+                  name="password" 
+                  id="password" 
+                  placeholder="Create a secure password"
+                  class="with-icon"
+                  required 
+                  autocomplete="new-password"
+                />
+                <i class="fas fa-lock input-icon"></i>
+                <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
+              </div>
+
+              <div class="form-group">
+                <label for="phone">
+                  <i class="fas fa-phone"></i> Phone Number *
+                </label>
+                <input 
+                  type="tel" 
+                  name="phone" 
+                  id="phone" 
+                  placeholder="Enter phone number"
+                  class="with-icon"
+                  required 
+                  autocomplete="tel"
+                />
+                <i class="fas fa-phone input-icon"></i>
+              </div>
+
+              <% if (classes.length > 0) { %>
+                <div class="form-group full-width">
+                  <label for="class">
+                    <i class="fas fa-graduation-cap"></i> Class Assignment *
+                  </label>
+                  <select name="class" id="class" required>
+                    <option value="" disabled selected>Select a class for the student</option>
+                    <% classes.forEach(clas => { %>
+                      <option value="<%= clas._id %>"><%= clas.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+              <% } else { %>
+                <div class="form-group full-width">
+                  <div class="message error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    No classes available. Please create a class first before adding students.
+                  </div>
+                </div>
+              <% } %>
+            </div>
+
+            <button type="submit" class="submit-btn" <%= classes.length === 0 ? 'disabled' : '' %>>
+              <i class="fas fa-plus"></i>
+              Add Student
+            </button>
+          </form>
+
+          <div class="form-footer">
+            <a href="/portal/admin/dashboard/students" class="back-btn">
+              <i class="fas fa-arrow-left"></i>
+              Back to Students List
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Password toggle functionality
+      function togglePassword() {
+        const passwordField = document.getElementById('password');
+        const toggleIcon = document.querySelector('.password-toggle');
+        
+        if (passwordField.type === 'password') {
+          passwordField.type = 'text';
+          toggleIcon.classList.remove('fa-eye');
+          toggleIcon.classList.add('fa-eye-slash');
+        } else {
+          passwordField.type = 'password';
+          toggleIcon.classList.remove('fa-eye-slash');
+          toggleIcon.classList.add('fa-eye');
+        }
+      }
+
+      // Form validation and enhancement
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('studentForm');
+        const submitBtn = document.querySelector('.submit-btn');
+        const inputs = document.querySelectorAll('input, select');
+
+        // Add floating label effect
+        inputs.forEach(input => {
+          input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+          });
+
+          input.addEventListener('blur', function() {
+            if (this.value === '') {
+              this.parentElement.classList.remove('focused');
+            }
+          });
+
+          // Initial check for pre-filled values
+          if (input.value !== '') {
+            input.parentElement.classList.add('focused');
+          }
+        });
+
+        // Enhanced form submission
+        form.addEventListener('submit', function(e) {
+          submitBtn.classList.add('loading');
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding Student...';
+          submitBtn.disabled = true;
+
+          // Re-enable button after timeout (fallback)
+          setTimeout(() => {
+            submitBtn.classList.remove('loading');
+            submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Student';
+            submitBtn.disabled = false;
+          }, 10000);
+        });
+
+        // Real-time validation
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+
+        emailInput.addEventListener('input', function() {
+          const email = this.value;
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          
+          if (email && !emailRegex.test(email)) {
+            this.style.borderColor = '#ef4444';
+          } else {
+            this.style.borderColor = '#e5e7eb';
+          }
+        });
+
+        phoneInput.addEventListener('input', function() {
+          // Remove non-numeric characters
+          this.value = this.value.replace(/[^0-9+\-\s()]/g, '');
+        });
+
+        // Animate form elements on load
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+          group.style.opacity = '0';
+          group.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            group.style.transition = 'all 0.5s ease';
+            group.style.opacity = '1';
+            group.style.transform = 'translateY(0)';
+          }, index * 100);
+        });
+      });
+
+      // Auto-hide messages after 5 seconds
+      document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(message => {
+          setTimeout(() => {
+            message.style.opacity = '0';
+            message.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+              message.style.display = 'none';
+            }, 300);
+          }, 5000);
+        });
+      });
+    </script>
   </body>
 </html>
