@@ -56,7 +56,7 @@ app.get("/admin", (req, res) => {
   res.redirect("/portal/admin/auth/login");
 });
 app.use("/portal/admin/auth/login", require("./routes/admin/auth/Login"));
-app.use("/portal/admin/dashboard", require("./routes/admin/dashboard/Index"));
+app.use("/portal/admin/dashboard", require("./routes/admin/dashboard/index"));
 app.use(
   "/portal/admin/dashboard/teachers",
   require("./routes/admin/dashboard/teachers/Index")
