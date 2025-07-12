@@ -3,19 +3,426 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title><%= student.name %> - Student Dashboard</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .welcome-text {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #4a5568;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: #718096;
+        margin-bottom: 25px;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #4a5568;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .info-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+      }
+
+      .info-icon {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        color: white;
+        font-size: 0.9rem;
+      }
+
+      .info-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-right: 8px;
+        min-width: 80px;
+      }
+
+      .info-value {
+        color: #718096;
+        flex: 1;
+      }
+
+      .subjects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .subject-item {
+        background: linear-gradient(135deg, #f7fafc, #edf2f7);
+        border: 2px solid rgba(102, 126, 234, 0.1);
+        border-radius: 12px;
+        padding: 15px;
+        text-align: center;
+        font-weight: 500;
+        color: #4a5568;
+        transition: all 0.3s ease;
+      }
+
+      .subject-item:hover {
+        border-color: #667eea;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-icon {
+        margin-right: 8px;
+        font-size: 1.1rem;
+      }
+
+      .stats-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        gap: 15px;
+      }
+
+      .stat-item {
+        text-align: center;
+        flex: 1;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: #718096;
+        margin-top: 5px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #718096;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        color: #cbd5e0;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .header {
+          padding: 20px;
+        }
+
+        .welcome-text {
+          font-size: 2rem;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .card {
+          padding: 20px;
+        }
+
+        .subjects-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .stats-row {
+          flex-direction: column;
+          gap: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .welcome-text {
+          font-size: 1.5rem;
+        }
+
+        .subtitle {
+          font-size: 1rem;
+        }
+
+        .card-title {
+          font-size: 1.2rem;
+        }
+
+        .info-item {
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+        }
+
+        .info-icon {
+          margin-bottom: 8px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1><%= student.name %> Dashboard</h1>
-    <p>Email: <%= student.email %></p>
-    <p>Phone Number: <%= student.phone %></p>
-    <p>Class: <%= classs.name %></p>
-    <h2>Subjects</h2>
-    <ol>
-      <% classs?.subjects?.forEach(subject => { %>
-      <li><%= subject %></li>
-      <% }) %>
-    </ol>
-    <a href="/portal/student/dashboard/assignments">Assignments</a>
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header">
+        <h1 class="welcome-text">Welcome, <%= student.name %>!</h1>
+        <p class="subtitle">Your personal learning dashboard</p>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- Student Information Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <h2 class="card-title">Student Information</h2>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <span class="info-label">Email:</span>
+            <span class="info-value"><%= student.email %></span>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-phone"></i>
+            </div>
+            <span class="info-label">Phone:</span>
+            <span class="info-value"><%= student.phone %></span>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">
+              <i class="fas fa-graduation-cap"></i>
+            </div>
+            <span class="info-label">Class:</span>
+            <span class="info-value"><%= classs.name %></span>
+          </div>
+        </div>
+
+        <!-- Subjects Card -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <h2 class="card-title">Your Subjects</h2>
+          </div>
+
+          <% if (classs?.subjects?.length > 0) { %>
+          <div class="subjects-grid">
+            <% classs.subjects.forEach(subject => { %>
+            <div class="subject-item">
+              <i class="fas fa-book-open" style="margin-right: 8px"></i>
+              <%= subject %>
+            </div>
+            <% }) %>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-item">
+              <div class="stat-number"><%= classs.subjects.length %></div>
+              <div class="stat-label">Total Subjects</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">0</div>
+              <div class="stat-label">Assignments</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">--</div>
+              <div class="stat-label">Average Grade</div>
+            </div>
+          </div>
+          <% } else { %>
+          <div class="empty-state">
+            <i class="fas fa-book-open"></i>
+            <p>No subjects assigned yet.</p>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-tasks"></i>
+          </div>
+          <h2 class="card-title">Quick Actions</h2>
+        </div>
+
+        <div class="action-buttons">
+          <a
+            href="/portal/student/dashboard/assignments"
+            class="btn btn-primary"
+          >
+            <i class="fas fa-clipboard-list btn-icon"></i>
+            View Assignments
+          </a>
+
+          <!-- <a href="/portal/student/dashboard/grades" class="btn btn-primary">
+            <i class="fas fa-chart-line btn-icon"></i>
+            Check Grades
+          </a> -->
+
+          <!-- <a href="/portal/student/dashboard/schedule" class="btn btn-primary">
+            <i class="fas fa-calendar-alt btn-icon"></i>
+            Class Schedule
+          </a> -->
+
+          <!-- <a href="/portal/student/dashboard/profile" class="btn btn-primary">
+            <i class="fas fa-user-edit btn-icon"></i>
+            Edit Profile
+          </a> -->
+        </div>
+      </div>
+    </div>
   </body>
 </html>
