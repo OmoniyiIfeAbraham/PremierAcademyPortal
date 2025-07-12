@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     const subjects = await DetailModel.find({});
     const classes = await ClassDetailModel.find({});
     const students = await StudentProfileModel.find({});
-    res.render("admin/dashboard/index", {
+    res.render("admin/dashboard/Index", {
       teachers,
       subjects,
       classes,
