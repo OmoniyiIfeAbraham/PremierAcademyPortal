@@ -3,31 +3,702 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title><%= teacher.name %> - Teacher Profile | Admin Portal</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #667eea;
+        padding: 12px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .profile-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .profile-header::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+      }
+
+      .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 3rem;
+        color: white;
+        font-weight: bold;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .profile-avatar::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.1)
+        );
+        border-radius: 50%;
+        animation: rotate 3s linear infinite;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      .profile-name {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+      }
+
+      .profile-role {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+      }
+
+      .role-teacher {
+        background: linear-gradient(45deg, #4facfe, #00f2fe);
+        color: white;
+      }
+
+      .role-admin {
+        background: linear-gradient(45deg, #f093fb, #f5576c);
+        color: white;
+      }
+
+      .role-coordinator {
+        background: linear-gradient(45deg, #43e97b, #38f9d7);
+        color: white;
+      }
+
+      .contact-info {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 50px;
+        color: #667eea;
+        font-weight: 500;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .info-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .info-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+
+      .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      .list-container {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 10px;
+      }
+
+      .list-container::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .list-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .list-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 10px;
+      }
+
+      .custom-list {
+        list-style: none;
+        counter-reset: item;
+      }
+
+      .custom-list li {
+        background: rgba(102, 126, 234, 0.05);
+        margin: 10px 0;
+        padding: 15px 20px;
+        border-radius: 12px;
+        border-left: 4px solid transparent;
+        background-image: linear-gradient(
+            rgba(102, 126, 234, 0.05),
+            rgba(102, 126, 234, 0.05)
+          ),
+          linear-gradient(45deg, #667eea, #764ba2);
+        background-origin: border-box;
+        background-clip: content-box, border-box;
+        position: relative;
+        transition: all 0.3s ease;
+        counter-increment: item;
+      }
+
+      .custom-list li:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+      }
+
+      .custom-list li::before {
+        content: counter(item);
+        position: absolute;
+        left: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #999;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 15px;
+      }
+
+      .actions-section {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .actions-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .action-btn {
+        padding: 18px 30px;
+        border: none;
+        border-radius: 15px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .action-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: all 0.6s ease;
+      }
+
+      .action-btn:hover::before {
+        left: 100%;
+      }
+
+      .edit-btn {
+        background: linear-gradient(45deg, #4facfe, #00f2fe);
+        color: white;
+        box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+      }
+
+      .edit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(79, 172, 254, 0.4);
+      }
+
+      .password-btn {
+        background: linear-gradient(45deg, #f093fb, #f5576c);
+        color: white;
+        box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+      }
+
+      .password-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(240, 147, 251, 0.4);
+      }
+
+      .delete-btn {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        color: white;
+        box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+      }
+
+      .delete-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+      }
+
+      .stats-mini {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 30px;
+        padding: 20px;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 15px;
+      }
+
+      .stat-mini {
+        text-align: center;
+      }
+
+      .stat-mini-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .stat-mini-label {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+
+        .profile-header {
+          padding: 30px 20px;
+        }
+
+        .profile-name {
+          font-size: 2rem;
+        }
+
+        .contact-info {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .content-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .info-card {
+          padding: 20px;
+        }
+
+        .actions-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .custom-list li {
+          padding: 12px 15px;
+          margin-left: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .profile-avatar {
+          width: 100px;
+          height: 100px;
+          font-size: 2.5rem;
+        }
+
+        .profile-name {
+          font-size: 1.8rem;
+        }
+
+        .card-title {
+          font-size: 1.3rem;
+        }
+
+        .actions-title {
+          font-size: 1.5rem;
+        }
+
+        .action-btn {
+          padding: 15px 25px;
+          font-size: 0.9rem;
+        }
+      }
+
+      /* Animation for page load */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .profile-header {
+        animation: fadeInUp 0.6s ease;
+      }
+
+      .info-card {
+        animation: fadeInUp 0.8s ease;
+      }
+
+      .actions-section {
+        animation: fadeInUp 1s ease;
+      }
+    </style>
   </head>
   <body>
-    <h1><%= teacher.name %> Dashboard</h1>
-    <p>Email: <%= teacher.email %></p>
-    <p>Phone Number: <%= teacher.phone %></p>
-    <p>Role: <%= teacher.role %></p>
-    <h2>Classes</h2>
-    <ol>
-      <% teacher.classes.forEach(clas => { %>
-      <li><%= clas %></li>
-      <% }) %>
-    </ol>
-    <h2>Subjects</h2>
-    <ol>
-      <% teacher.subjects.forEach(subject => { %>
-      <li><%= subject %></li>
-      <% }) %>
-    </ol>
-    <a href="/portal/admin/dashboard/teachers/edit/<%= teacher._id %>">Edit</a>
-    <a href="/portal/admin/dashboard/teachers/edit_password/<%= teacher._id %>"
-      >Change Password</a
-    >
-    <a href="/portal/admin/dashboard/teachers/delete/<%= teacher._id %>"
-      >Delete</a
-    >
+    <div class="container">
+      <!-- Back Button -->
+      <a href="/portal/admin/dashboard/teachers" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Teachers
+      </a>
+
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <%= teacher.name.charAt(0).toUpperCase() %>
+        </div>
+        <h1 class="profile-name"><%= teacher.name %></h1>
+        <div class="profile-role role-<%= teacher.role %>">
+          <% if (teacher.role === 'admin') { %>
+          <i class="fas fa-crown"></i> Administrator <% } else if (teacher.role
+          === 'coordinator') { %> <i class="fas fa-users"></i> Coordinator <% }
+          else { %> <i class="fas fa-chalkboard-teacher"></i> Teacher <% } %>
+        </div>
+        <div class="contact-info">
+          <div class="contact-item">
+            <i class="fas fa-envelope"></i>
+            <%= teacher.email %>
+          </div>
+          <div class="contact-item">
+            <i class="fas fa-phone"></i>
+            <%= teacher.phone %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <!-- Classes Card -->
+        <div class="info-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-school"></i>
+            </div>
+            <h2 class="card-title">Classes</h2>
+          </div>
+          <div class="list-container">
+            <% if (teacher.classes && teacher.classes.length > 0) { %>
+            <ol class="custom-list">
+              <% teacher.classes.forEach(clas => { %>
+              <li><%= clas %></li>
+              <% }) %>
+            </ol>
+            <% } else { %>
+            <div class="empty-state">
+              <i class="fas fa-school"></i>
+              <p>No classes assigned</p>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Subjects Card -->
+        <div class="info-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <h2 class="card-title">Subjects</h2>
+          </div>
+          <div class="list-container">
+            <% if (teacher.subjects && teacher.subjects.length > 0) { %>
+            <ol class="custom-list">
+              <% teacher.subjects.forEach(subject => { %>
+              <li><%= subject %></li>
+              <% }) %>
+            </ol>
+            <% } else { %>
+            <div class="empty-state">
+              <i class="fas fa-book"></i>
+              <p>No subjects assigned</p>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Mini -->
+      <div class="stats-mini">
+        <div class="stat-mini">
+          <div class="stat-mini-number">
+            <%= teacher.classes ? teacher.classes.length : 0 %>
+          </div>
+          <div class="stat-mini-label">Classes</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-number">
+            <%= teacher.subjects ? teacher.subjects.length : 0 %>
+          </div>
+          <div class="stat-mini-label">Subjects</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-number">
+            <%= (teacher.classes ? teacher.classes.length : 0) +
+            (teacher.subjects ? teacher.subjects.length : 0) %>
+          </div>
+          <div class="stat-mini-label">Total Load</div>
+        </div>
+      </div>
+
+      <!-- Actions Section -->
+      <div class="actions-section">
+        <h2 class="actions-title">
+          <i class="fas fa-cogs"></i>
+          Actions
+        </h2>
+        <div class="actions-grid">
+          <a
+            href="/portal/admin/dashboard/teachers/edit/<%= teacher._id %>"
+            class="action-btn edit-btn"
+          >
+            <i class="fas fa-edit"></i>
+            Edit Profile
+          </a>
+          <a
+            href="/portal/admin/dashboard/teachers/edit_password/<%= teacher._id %>"
+            class="action-btn password-btn"
+          >
+            <i class="fas fa-key"></i>
+            Change Password
+          </a>
+          <a
+            href="/portal/admin/dashboard/teachers/delete/<%= teacher._id %>"
+            class="action-btn delete-btn"
+            onclick="return confirm('Are you sure you want to delete this teacher? This action cannot be undone.')"
+          >
+            <i class="fas fa-trash"></i>
+            Delete Teacher
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Add smooth scrolling for better UX
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector(this.getAttribute("href")).scrollIntoView({
+            behavior: "smooth",
+          });
+        });
+      });
+
+      // Add click animation to action buttons
+      document.querySelectorAll(".action-btn").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          // Special handling for delete button
+          if (this.classList.contains("delete-btn")) {
+            if (
+              !confirm(
+                "Are you sure you want to delete this teacher? This action cannot be undone."
+              )
+            ) {
+              e.preventDefault();
+              return;
+            }
+          }
+
+          this.style.transform = "scale(0.95)";
+          setTimeout(() => {
+            this.style.transform = "";
+          }, 150);
+        });
+      });
+
+      // Add stagger animation to list items
+      document.addEventListener("DOMContentLoaded", function () {
+        const listItems = document.querySelectorAll(".custom-list li");
+        listItems.forEach((item, index) => {
+          item.style.animationDelay = `${index * 0.1}s`;
+          item.style.animation = "fadeInUp 0.6s ease forwards";
+        });
+      });
+
+      // Add loading states to buttons
+      document.querySelectorAll(".action-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          if (!this.classList.contains("delete-btn")) {
+            const originalText = this.innerHTML;
+            this.innerHTML =
+              '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+            setTimeout(() => {
+              this.innerHTML = originalText;
+            }, 1000);
+          }
+        });
+      });
+    </script>
   </body>
 </html>

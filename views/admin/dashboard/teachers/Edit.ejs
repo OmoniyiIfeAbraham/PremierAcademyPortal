@@ -3,60 +3,604 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Edit Teacher - School Portal</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #2dd4bf 0%,
+          #06b6d4 50%,
+          #3b82f6 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        width: 100%;
+        max-width: 800px;
+        padding: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #2dd4bf, #06b6d4, #3b82f6);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #2dd4bf, #06b6d4);
+        border-radius: 50%;
+        opacity: 0.1;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: translateX(-50%) scale(1);
+          opacity: 0.1;
+        }
+        50% {
+          transform: translateX(-50%) scale(1.1);
+          opacity: 0.2;
+        }
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, #2dd4bf, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .header p {
+        color: #718096;
+        font-size: 1.1rem;
+      }
+
+      .teacher-info {
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 32px;
+        border: 2px solid #0ea5e9;
+        text-align: center;
+      }
+
+      .teacher-info h3 {
+        color: #0369a1;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+
+      .teacher-info p {
+        color: #0284c7;
+        font-size: 0.95rem;
+      }
+
+      .message {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        font-weight: 500;
+        text-align: center;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      .message.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .message.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.9rem;
+      }
+
+      .form-group input[type="text"] {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        outline: none;
+      }
+
+      .form-group input[type="text"]:focus {
+        border-color: #06b6d4;
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .form-group input::placeholder {
+        color: #9ca3af;
+      }
+
+      .checkbox-section {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .checkbox-section h3 {
+        color: #374151;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+
+      .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: white;
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .checkbox-item:hover {
+        border-color: #06b6d4;
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .checkbox-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #06b6d4;
+        cursor: pointer;
+      }
+
+      .checkbox-item label {
+        font-weight: 500;
+        color: #374151;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .checkbox-item.checked {
+        border-color: #06b6d4;
+        background: linear-gradient(135deg, #06b6d4, #2dd4bf);
+        color: white;
+      }
+
+      .checkbox-item.checked label {
+        color: white;
+      }
+
+      .role-section {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 32px;
+        border: 2px solid #f59e0b;
+      }
+
+      .role-section h3 {
+        color: #92400e;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .radio-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+
+      .radio-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        background: white;
+        border-radius: 10px;
+        border: 2px solid #f59e0b;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .radio-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+      }
+
+      .radio-item input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #f59e0b;
+        cursor: pointer;
+      }
+
+      .radio-item label {
+        font-weight: 500;
+        color: #92400e;
+        cursor: pointer;
+        margin: 0;
+      }
+
+      .radio-item.selected {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        border-color: #d97706;
+      }
+
+      .radio-item.selected label {
+        color: white;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 18px 32px;
+        background: linear-gradient(135deg, #2dd4bf, #06b6d4);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(6, 182, 212, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .submit-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .submit-btn:hover::before {
+        left: 100%;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(6, 182, 212, 0.4);
+      }
+
+      .submit-btn:active {
+        transform: translateY(-1px);
+      }
+
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(107, 114, 128, 0.1);
+        color: #6b7280;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      .back-btn:hover {
+        background: rgba(107, 114, 128, 0.2);
+        transform: translateX(-4px);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 24px;
+          margin: 10px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .checkbox-grid,
+        .radio-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .checkbox-section,
+        .role-section {
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 20px;
+        }
+
+        .header h1 {
+          font-size: 1.8rem;
+        }
+
+        .form-group input[type="text"] {
+          padding: 14px 16px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Edit Teacher</h1>
+    <div class="container">
+      <a href="/portal/admin/dashboard/teachers" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Teachers
+      </a>
 
-    <p><%= msg %></p>
+      <div class="header">
+        <h1>
+          <i class="fas fa-user-edit"></i>
+          Edit Teacher
+        </h1>
+        <p>Update teacher information and assignments</p>
+      </div>
 
-    <form action="/portal/admin/dashboard/teachers/edit/<%= teacher._id %>" method="post">
-      <input
-        type="text"
-        name="name"
-        id=""
-        placeholder="Fullname"
-        required
-        value="<%= teacher.name %>"
-      />
-      <br />
-      <% if (classes.length > 0) { %> <% classes.forEach(clas => { %> <% const
-      isChecked = teacher.classes.includes(clas.name); %>
-      <input
-        type="checkbox"
-        name="classes"
-        id="<%= clas.name %>"
-        value="<%= clas.name %>"
-        <% if (isChecked) { %> checked <% } %>
-      />
-      <label for="<%= clas.name %>"><%= clas.name %></label>
-      <br />
-      <% }) %> <% } %> 
-      <br>
-      <% if (subjects.length > 0) { %> <%
-      subjects.forEach(subject => { %>
-         <% const isChecked = teacher.subjects.includes(subject.title); %>
-      <input
-        type="checkbox"
-        name="subjects"
-        id="<%=subject.title %>"
-        value="<%=subject.title %>"
-        <% if (isChecked) { %> checked <% } %>
-      />
-      <label for="<%=subject.title %>"><%=subject.title %></label>
-      <br />
-      <% }) %> <% } %> <% if(teacher.role === 'HOD') { %>
-      <input type="radio" name="role" value="HOD" checked />
-      <label for="role">HOD (optional)</label>
-      <br />
-      <input type="radio" name="role" value="Teacher" />
-      <label for="role">Teacher (optional)</label>
-      <% } else { %>
-      <input type="radio" name="role" value="HOD" />
-      <label for="role">HOD (optional)</label>
+      <div class="teacher-info">
+        <h3><%= teacher.name %></h3>
+        <p>Currently editing teacher profile</p>
+      </div>
+
+      <% if (msg && msg.trim()) { %>
+      <div
+        class="message <%= msg.includes('success') || msg.includes('Success') ? 'success' : 'error' %>"
+      >
+        <i
+          class="fas <%= msg.includes('success') || msg.includes('Success') ? 'fa-check-circle' : 'fa-exclamation-circle' %>"
+        ></i>
+        <%= msg %>
+      </div>
       <% } %>
-      <br />
-      <input type="submit" value="Edit" />
-    </form>
+
+      <form
+        action="/portal/admin/dashboard/teachers/edit/<%= teacher._id %>"
+        method="post"
+      >
+        <div class="form-group">
+          <label for="name"> <i class="fas fa-user"></i> Full Name </label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Enter full name"
+            required
+            value="<%= teacher.name %>"
+          />
+        </div>
+
+        <% if (classes && classes.length > 0) { %>
+        <div class="checkbox-section">
+          <h3><i class="fas fa-graduation-cap"></i> Assign Classes</h3>
+          <div class="checkbox-grid">
+            <% classes.forEach(clas => { %> <% const isChecked =
+            teacher.classes.includes(clas.name); %>
+            <div class="checkbox-item <%= isChecked ? 'checked' : '' %>">
+              <input type="checkbox" name="classes" id="class_<%= clas.name %>"
+              value="<%= clas.name %>" <%= isChecked ? 'checked' : '' %> />
+              <label for="class_<%= clas.name %>"><%= clas.name %></label>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+        <% } %> <% if (subjects && subjects.length > 0) { %>
+        <div class="checkbox-section">
+          <h3><i class="fas fa-book"></i> Assign Subjects</h3>
+          <div class="checkbox-grid">
+            <% subjects.forEach(subject => { %> <% const isChecked =
+            teacher.subjects.includes(subject.title); %>
+            <div class="checkbox-item <%= isChecked ? 'checked' : '' %>">
+              <input type="checkbox" name="subjects" id="subject_<%=
+              subject.title %>" value="<%= subject.title %>" <%= isChecked ?
+              'checked' : '' %> />
+              <label for="subject_<%= subject.title %>"
+                ><%= subject.title %></label
+              >
+            </div>
+            <% }) %>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="role-section">
+          <h3><i class="fas fa-crown"></i> Teacher Role</h3>
+          <div class="radio-grid">
+            <div
+              class="radio-item <%= teacher.role === 'HOD' ? 'selected' : '' %>"
+            >
+              <input type="radio" name="role" id="hod" value="HOD" <%=
+              teacher.role === 'HOD' ? 'checked' : '' %> />
+              <label for="hod">Head of Department (HOD)</label>
+            </div>
+            <div
+              class="radio-item <%= teacher.role !== 'HOD' ? 'selected' : '' %>"
+            >
+              <input type="radio" name="role" id="teacher" value="Teacher" <%=
+              teacher.role !== 'HOD' ? 'checked' : '' %> />
+              <label for="teacher">Regular Teacher</label>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-save"></i> Update Teacher
+        </button>
+      </form>
+    </div>
+
+    <script>
+      // Add interactive checkbox styling
+      document
+        .querySelectorAll('.checkbox-item input[type="checkbox"]')
+        .forEach((checkbox) => {
+          checkbox.addEventListener("change", function () {
+            const item = this.closest(".checkbox-item");
+            if (this.checked) {
+              item.classList.add("checked");
+            } else {
+              item.classList.remove("checked");
+            }
+          });
+        });
+
+      // Add interactive radio button styling
+      document
+        .querySelectorAll('.radio-item input[type="radio"]')
+        .forEach((radio) => {
+          radio.addEventListener("change", function () {
+            // Remove selected class from all radio items in the same group
+            const radioGroup = document.querySelectorAll(
+              `input[name="${this.name}"]`
+            );
+            radioGroup.forEach((r) => {
+              r.closest(".radio-item").classList.remove("selected");
+            });
+
+            // Add selected class to the current item
+            this.closest(".radio-item").classList.add("selected");
+          });
+        });
+
+      // Add form validation feedback
+      const nameInput = document.querySelector('input[name="name"]');
+      nameInput.addEventListener("blur", function () {
+        if (this.value.trim() === "") {
+          this.style.borderColor = "#ef4444";
+        } else {
+          this.style.borderColor = "#10b981";
+        }
+      });
+
+      nameInput.addEventListener("input", function () {
+        if (this.value.trim() !== "") {
+          this.style.borderColor = "#06b6d4";
+        }
+      });
+
+      // Add loading state to submit button
+      document.querySelector("form").addEventListener("submit", function () {
+        const submitBtn = document.querySelector(".submit-btn");
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Updating Teacher...';
+        submitBtn.disabled = true;
+      });
+    </script>
   </body>
 </html>

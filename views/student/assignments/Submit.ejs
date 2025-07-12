@@ -3,44 +3,695 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Submit Assignment | Student Portal</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #e0e0e0;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .header h1 i {
+        color: #667eea;
+      }
+
+      .header p {
+        color: #7f8c8d;
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+      }
+
+      .message {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: 500;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+      }
+
+      .message.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .message.success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .message.error {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .message.info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .form-group label i {
+        color: #667eea;
+        font-size: 1rem;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        font-family: inherit;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .form-input:hover {
+        border-color: #bdc3c7;
+      }
+
+      .form-input::placeholder {
+        color: #95a5a6;
+        font-style: italic;
+      }
+
+      textarea.form-input {
+        min-height: 120px;
+        resize: vertical;
+        line-height: 1.5;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .file-input-wrapper input[type="file"] {
+        position: absolute;
+        left: -9999px;
+        opacity: 0;
+      }
+
+      .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        border: 2px dashed #bdc3c7;
+        border-radius: 12px;
+        background: #f8f9fa;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        color: #7f8c8d;
+        text-align: center;
+      }
+
+      .file-input-label:hover {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.05);
+        color: #667eea;
+        transform: translateY(-2px);
+      }
+
+      .file-input-label.has-file {
+        border-color: #27ae60;
+        background: rgba(39, 174, 96, 0.05);
+        color: #27ae60;
+        border-style: solid;
+      }
+
+      .file-input-label i {
+        font-size: 1.2rem;
+      }
+
+      .file-name {
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 8px;
+        color: #667eea;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: none;
+      }
+
+      .file-name.show {
+        display: block;
+      }
+
+      .select-wrapper {
+        position: relative;
+      }
+
+      .select-wrapper::after {
+        content: "\f107";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #667eea;
+      }
+
+      select.form-input {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+        padding-right: 3rem;
+      }
+
+      select.form-input option {
+        padding: 0.5rem;
+        background: white;
+        color: #333;
+      }
+
+      .submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .submit-btn:active {
+        transform: translateY(-1px);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .back-link:hover {
+        color: #764ba2;
+        transform: translateX(-5px);
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: #e0e0e0;
+        border-radius: 2px;
+        overflow: hidden;
+        margin-top: 1rem;
+        display: none;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+        width: 0%;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 1.5rem;
+          margin: 10px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .form-container {
+          padding: 1.5rem;
+        }
+
+        .form-input {
+          padding: 0.8rem;
+        }
+
+        .submit-btn {
+          padding: 0.8rem 1.5rem;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 1rem;
+        }
+
+        .header h1 {
+          font-size: 1.5rem;
+          flex-direction: column;
+          gap: 0.3rem;
+        }
+
+        .form-container {
+          padding: 1rem;
+        }
+
+        .form-input {
+          padding: 0.7rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .form-group {
+        animation: slideIn 0.6s ease-out;
+        animation-fill-mode: both;
+      }
+
+      .form-group:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .form-group:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .form-group:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .form-group:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .form-group:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+
+      .loading {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .loading::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        animation: loading 1.5s infinite;
+      }
+
+      @keyframes loading {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Submit Assignment</h1>
+    <div class="container">
+      <a href="/portal/student/dashboard/assignments" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        Back to Assignments
+      </a>
 
-    <p><%= msg %></p>
+      <div class="header">
+        <h1>
+          <i class="fas fa-upload"></i>
+          Submit Assignment
+        </h1>
+        <p>Upload your completed assignment below</p>
+      </div>
 
-    <form
-      action="/portal/student/dashboard/assignments/add"
-      method="post"
-      enctype="multipart/form-data"
-    >
-      <input
-        type="text"
-        name="title"
-        id=""
-        placeholder="Assignment Title"
-        required
-      />
-      <br />
-      <textarea
-        name="description"
-        id=""
-        placeholder="Assignment Description"
-      ></textarea>
-      <br />
-      <input type="file" name="file" id="" />
-      <br />
-      <% if (classs.subjects.length > 0) { %>
-      <select name="subject" id="subjects">
-        <option value="" disabled>---SELECT SUBJECT---</option>
-        <% classs.subjects.forEach(subject => { %>
-        <option value="<%= subject %>"><%= subject %></option>
-        <% }) %>
-      </select>
-      <br />
+      <% if (msg && msg.trim() !== '') { %>
+      <div
+        class="message <%= msg.includes('success') || msg.includes('Success') ? 'success' : msg.includes('error') || msg.includes('Error') ? 'error' : 'info' %>"
+        id="message"
+      >
+        <%= msg %>
+      </div>
       <% } %>
-      <input type="submit" value="Submit" />
-    </form>
+
+      <div class="form-container">
+        <form
+          action="/portal/student/dashboard/assignments/add"
+          method="post"
+          enctype="multipart/form-data"
+          id="assignmentForm"
+        >
+          <div class="form-group">
+            <label for="title">
+              <i class="fas fa-heading"></i>
+              Assignment Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              class="form-input"
+              placeholder="Enter assignment title (e.g., Mathematics Quiz 1)"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="description">
+              <i class="fas fa-align-left"></i>
+              Description
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              class="form-input"
+              placeholder="Provide a brief description of your assignment (optional)"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <i class="fas fa-paperclip"></i>
+              Assignment File
+            </label>
+            <div class="file-input-wrapper">
+              <input
+                type="file"
+                name="file"
+                id="file"
+                accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
+              />
+              <label for="file" class="file-input-label" id="fileLabel">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Choose file or drag and drop</span>
+              </label>
+            </div>
+            <div class="file-name" id="fileName"></div>
+          </div>
+
+          <% if (classs.subjects && classs.subjects.length > 0) { %>
+          <div class="form-group">
+            <label for="subjects">
+              <i class="fas fa-book"></i>
+              Subject
+            </label>
+            <div class="select-wrapper">
+              <select name="subject" id="subjects" class="form-input" required>
+                <option value="" disabled selected>Select a subject</option>
+                <% classs.subjects.forEach(subject => { %>
+                <option value="<%= subject %>"><%= subject %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <% } %>
+
+          <div class="form-group">
+            <button type="submit" class="submit-btn" id="submitBtn">
+              <i class="fas fa-paper-plane"></i>
+              Submit Assignment
+            </button>
+          </div>
+
+          <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // File input handling
+      const fileInput = document.getElementById("file");
+      const fileLabel = document.getElementById("fileLabel");
+      const fileName = document.getElementById("fileName");
+      const form = document.getElementById("assignmentForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const progressBar = document.getElementById("progressBar");
+      const progressFill = document.getElementById("progressFill");
+
+      fileInput.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          fileLabel.classList.add("has-file");
+          fileLabel.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            <span>File selected: ${file.name}</span>
+          `;
+          fileName.textContent = `${file.name} (${formatFileSize(file.size)})`;
+          fileName.classList.add("show");
+        } else {
+          resetFileInput();
+        }
+      });
+
+      function resetFileInput() {
+        fileLabel.classList.remove("has-file");
+        fileLabel.innerHTML = `
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Choose file or drag and drop</span>
+        `;
+        fileName.classList.remove("show");
+      }
+
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const k = 1024;
+        const sizes = ["Bytes", "KB", "MB", "GB"];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+      }
+
+      // Form submission handling
+      form.addEventListener("submit", function (e) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add("loading");
+        submitBtn.innerHTML = `
+          <i class="fas fa-spinner fa-spin"></i>
+          Submitting...
+        `;
+
+        // Show progress bar
+        progressBar.style.display = "block";
+        simulateProgress();
+      });
+
+      function simulateProgress() {
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 15;
+          if (progress >= 95) {
+            progress = 95;
+            clearInterval(interval);
+          }
+          progressFill.style.width = progress + "%";
+        }, 200);
+      }
+
+      // Show message with animation
+      const message = document.getElementById("message");
+      if (message) {
+        setTimeout(() => {
+          message.classList.add("show");
+        }, 300);
+      }
+
+      // Form validation
+      const titleInput = document.getElementById("title");
+      const subjectSelect = document.getElementById("subjects");
+
+      titleInput.addEventListener("input", function () {
+        if (this.value.trim().length < 3) {
+          this.style.borderColor = "#e74c3c";
+        } else {
+          this.style.borderColor = "#27ae60";
+        }
+      });
+
+      if (subjectSelect) {
+        subjectSelect.addEventListener("change", function () {
+          this.style.borderColor = "#27ae60";
+        });
+      }
+
+      // Drag and drop functionality
+      const fileWrapper = document.querySelector(".file-input-wrapper");
+
+      ["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+        fileWrapper.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      ["dragenter", "dragover"].forEach((eventName) => {
+        fileWrapper.addEventListener(eventName, highlight, false);
+      });
+
+      ["dragleave", "drop"].forEach((eventName) => {
+        fileWrapper.addEventListener(eventName, unhighlight, false);
+      });
+
+      function highlight(e) {
+        fileLabel.style.borderColor = "#667eea";
+        fileLabel.style.background = "rgba(102, 126, 234, 0.1)";
+      }
+
+      function unhighlight(e) {
+        fileLabel.style.borderColor = "#bdc3c7";
+        fileLabel.style.background = "#f8f9fa";
+      }
+
+      fileWrapper.addEventListener("drop", handleDrop, false);
+
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        if (files.length > 0) {
+          fileInput.files = files;
+          fileInput.dispatchEvent(new Event("change"));
+        }
+      }
+
+      // Auto-hide message after 5 seconds
+      if (message) {
+        setTimeout(() => {
+          message.style.opacity = "0";
+          message.style.transform = "translateY(-20px)";
+        }, 5000);
+      }
+    </script>
   </body>
 </html>

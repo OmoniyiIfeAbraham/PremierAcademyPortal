@@ -3,13 +3,780 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Admin Dashboard | School Management Portal</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header Section */
+      .header {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+      }
+
+      .header::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        z-index: 0;
+      }
+
+      .dashboard-title {
+        font-size: 4rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #ffffff, #f0f9ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .dashboard-subtitle {
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 300;
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .dashboard-icon {
+        font-size: 6rem;
+        color: rgba(255, 255, 255, 0.2);
+        margin-bottom: 30px;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      /* Dashboard Grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+      }
+
+      .dashboard-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .dashboard-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: var(--gradient);
+        border-radius: 25px 25px 0 0;
+      }
+
+      .dashboard-card::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: var(--gradient);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.6s ease;
+        z-index: 0;
+      }
+
+      .dashboard-card:hover::after {
+        width: 500px;
+        height: 500px;
+      }
+
+      .dashboard-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+      }
+
+      .dashboard-card:hover .card-content {
+        color: white;
+        z-index: 1;
+        position: relative;
+      }
+
+      .dashboard-card:hover .card-icon {
+        color: white;
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 1;
+        transition: all 0.4s ease;
+      }
+
+      .card-icon {
+        font-size: 4rem;
+        margin-bottom: 25px;
+        color: var(--color);
+        transition: all 0.4s ease;
+      }
+
+      .card-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #333;
+        transition: all 0.4s ease;
+      }
+
+      .card-description {
+        font-size: 1.1rem;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        transition: all 0.4s ease;
+      }
+
+      .card-arrow {
+        font-size: 1.5rem;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition: all 0.4s ease;
+      }
+
+      .dashboard-card:hover .card-arrow {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      /* Color Themes for Cards */
+      .teachers-card {
+        --gradient: linear-gradient(45deg, #667eea, #764ba2);
+        --color: #667eea;
+      }
+
+      .subjects-card {
+        --gradient: linear-gradient(45deg, #f093fb, #f5576c);
+        --color: #f093fb;
+      }
+
+      .classes-card {
+        --gradient: linear-gradient(45deg, #4facfe, #00f2fe);
+        --color: #4facfe;
+      }
+
+      .students-card {
+        --gradient: linear-gradient(45deg, #43e97b, #38f9d7);
+        --color: #43e97b;
+      }
+
+      /* Stats Section */
+      .stats-section {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        margin-bottom: 50px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      }
+
+      .stats-title {
+        text-align: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 40px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 30px;
+      }
+
+      .stat-item {
+        text-align: center;
+        padding: 30px;
+        background: rgba(102, 126, 234, 0.05);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient);
+      }
+
+      .stat-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--color);
+        display: block;
+        margin-bottom: 10px;
+        counter-reset: num var(--num);
+        animation: countUp 2s ease-in-out;
+      }
+
+      .stat-label {
+        font-size: 1.2rem;
+        color: #666;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      @keyframes countUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Quick Actions */
+      .quick-actions {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 25px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .quick-actions-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .quick-actions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .quick-action-btn {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 20px 30px;
+        border: none;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .quick-action-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: all 0.6s ease;
+      }
+
+      .quick-action-btn:hover::before {
+        left: 100%;
+      }
+
+      .quick-action-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 15px;
+        }
+
+        .dashboard-title {
+          font-size: 2.5rem;
+        }
+
+        .dashboard-icon {
+          font-size: 4rem;
+        }
+
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+
+        .dashboard-card {
+          padding: 30px;
+        }
+
+        .card-icon {
+          font-size: 3rem;
+        }
+
+        .card-title {
+          font-size: 1.8rem;
+        }
+
+        .stats-section,
+        .quick-actions {
+          padding: 30px;
+        }
+
+        .stats-title,
+        .quick-actions-title {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .dashboard-title {
+          font-size: 2rem;
+        }
+
+        .dashboard-card {
+          padding: 25px;
+        }
+
+        .card-icon {
+          font-size: 2.5rem;
+        }
+
+        .card-title {
+          font-size: 1.5rem;
+        }
+
+        .stat-number {
+          font-size: 2rem;
+        }
+      }
+
+      /* Loading Animation */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+
+      .loading-spinner {
+        width: 80px;
+        height: 80px;
+        border: 8px solid rgba(255, 255, 255, 0.2);
+        border-top: 8px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Entry Animation */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease forwards;
+      }
+
+      .fade-in:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .fade-in:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .fade-in:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .fade-in:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Admin Dashboard</h1>
-    <a href="/portal/admin/dashboard/teachers">Teachers</a>
-    <a href="/portal/admin/dashboard/subjects">Subjects</a>
-    <a href="/portal/admin/dashboard/classes">Classes</a>
-    <a href="/portal/admin/dashboard/students">Students</a>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+    </div>
+
+    <div class="container">
+      <!-- Header Section -->
+      <div class="header">
+        <div class="dashboard-icon">
+          <i class="fas fa-university"></i>
+        </div>
+        <h1 class="dashboard-title">Admin Dashboard</h1>
+        <p class="dashboard-subtitle">
+          Premier Academy School Management Portal
+        </p>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <a
+          href="/portal/admin/dashboard/teachers"
+          class="dashboard-card teachers-card fade-in"
+        >
+          <div class="card-content">
+            <div class="card-icon">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h2 class="card-title">Teachers</h2>
+            <p class="card-description">
+              Manage teacher profiles, assignments, and performance tracking
+            </p>
+            <div class="card-arrow">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="/portal/admin/dashboard/subjects"
+          class="dashboard-card subjects-card fade-in"
+        >
+          <div class="card-content">
+            <div class="card-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <h2 class="card-title">Subjects</h2>
+            <p class="card-description">
+              Configure curriculum subjects and course requirements
+            </p>
+            <div class="card-arrow">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="/portal/admin/dashboard/classes"
+          class="dashboard-card classes-card fade-in"
+        >
+          <div class="card-content">
+            <div class="card-icon">
+              <i class="fas fa-school"></i>
+            </div>
+            <h2 class="card-title">Classes</h2>
+            <p class="card-description">
+              Organize class schedules, rooms, and academic sessions
+            </p>
+            <div class="card-arrow">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="/portal/admin/dashboard/students"
+          class="dashboard-card students-card fade-in"
+        >
+          <div class="card-content">
+            <div class="card-icon">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <h2 class="card-title">Students</h2>
+            <p class="card-description">
+              Monitor student records, enrollment, and academic progress
+            </p>
+            <div class="card-arrow">
+              <i class="fas fa-arrow-right"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="stats-section">
+        <h2 class="stats-title">
+          <i class="fas fa-chart-line"></i>
+          System Overview
+        </h2>
+        <div class="stats-grid">
+          <div class="stat-item teachers-card">
+            <span class="stat-number" data-target="<%= teachers.length %>"
+              >0</span
+            >
+            <span class="stat-label">Total Teachers</span>
+          </div>
+          <div class="stat-item subjects-card">
+            <span class="stat-number" data-target="<%= subjects.length %>"
+              >0</span
+            >
+            <span class="stat-label">Active Subjects</span>
+          </div>
+          <div class="stat-item classes-card">
+            <span class="stat-number" data-target="<%= classes.length %>"
+              >0</span
+            >
+            <span class="stat-label">Total Classes</span>
+          </div>
+          <div class="stat-item students-card">
+            <span class="stat-number" data-target="<%= students.length %>"
+              >0</span
+            >
+            <span class="stat-label">Enrolled Students</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h2 class="quick-actions-title">
+          <i class="fas fa-bolt"></i>
+          Quick Actions
+        </h2>
+        <div class="quick-actions-grid">
+          <a
+            href="/portal/admin/dashboard/teachers/add"
+            class="quick-action-btn"
+          >
+            <i class="fas fa-user-plus"></i>
+            Add New Teacher
+          </a>
+          <a
+            href="/portal/admin/dashboard/subjects/add"
+            class="quick-action-btn"
+          >
+            <i class="fas fa-plus"></i>
+            Create Subject
+          </a>
+          <a
+            href="/portal/admin/dashboard/classes/add"
+            class="quick-action-btn"
+          >
+            <i class="fas fa-plus-circle"></i>
+            Add New Class
+          </a>
+          <a
+            href="/portal/admin/dashboard/students/add"
+            class="quick-action-btn"
+          >
+            <i class="fas fa-user-graduate"></i>
+            Enroll Student
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Remove loading overlay after page load
+      window.addEventListener("load", function () {
+        const loadingOverlay = document.getElementById("loadingOverlay");
+        setTimeout(() => {
+          loadingOverlay.style.opacity = "0";
+          setTimeout(() => {
+            loadingOverlay.style.display = "none";
+          }, 500);
+        }, 1000);
+      });
+
+      // Animated counter for stats
+      function animateCounter(element, target, duration = 2000) {
+        const start = 0;
+        const startTime = Date.now();
+
+        function update() {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+
+          const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+          const current = Math.floor(easeOutQuart * target);
+
+          element.textContent = current.toLocaleString();
+
+          if (progress < 1) {
+            requestAnimationFrame(update);
+          }
+        }
+
+        update();
+      }
+
+      // Intersection Observer for triggering counter animations
+      const observerOptions = {
+        threshold: 0.5,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const statNumbers = entry.target.querySelectorAll(".stat-number");
+            statNumbers.forEach((stat) => {
+              const target = parseInt(stat.getAttribute("data-target"));
+              animateCounter(stat, target);
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // Observe stats section
+      document.addEventListener("DOMContentLoaded", () => {
+        const statsSection = document.querySelector(".stats-section");
+        if (statsSection) {
+          observer.observe(statsSection);
+        }
+      });
+
+      // Add click animation to cards
+      document
+        .querySelectorAll(".dashboard-card, .quick-action-btn")
+        .forEach((card) => {
+          card.addEventListener("click", function () {
+            this.style.transform = "scale(0.95)";
+            setTimeout(() => {
+              this.style.transform = "";
+            }, 150);
+          });
+        });
+
+      // Add particle effect (optional)
+      function createParticle() {
+        const particle = document.createElement("div");
+        particle.style.position = "fixed";
+        particle.style.width = "4px";
+        particle.style.height = "4px";
+        particle.style.background = "rgba(255, 255, 255, 0.5)";
+        particle.style.borderRadius = "50%";
+        particle.style.pointerEvents = "none";
+        particle.style.zIndex = "1000";
+        particle.style.left = Math.random() * window.innerWidth + "px";
+        particle.style.top = "-10px";
+
+        document.body.appendChild(particle);
+
+        const duration = Math.random() * 3000 + 2000;
+        const xDrift = (Math.random() - 0.5) * 100;
+
+        particle.animate(
+          [
+            { transform: "translateY(0px) translateX(0px)", opacity: 1 },
+            {
+              transform: `translateY(${
+                window.innerHeight + 10
+              }px) translateX(${xDrift}px)`,
+              opacity: 0,
+            },
+          ],
+          {
+            duration: duration,
+            easing: "ease-out",
+          }
+        ).onfinish = () => {
+          particle.remove();
+        };
+      }
+
+      // Create particles periodically
+      setInterval(createParticle, 300);
+    </script>
   </body>
 </html>
